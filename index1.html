@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Menopause Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* TRAUMA-INFORMED PALETTE:
+   - No harsh reds or high-contrast oranges
+   - Warm earth tones, sage, soft amber, dusty mauve
+   - Backgrounds: creamy, warm, never stark white
+   - Borders: soft, never sharp black lines
+*/
+:root{
+  --sage:#3D7A5C;       /* primary: grounding green */
+  --sl:#EAF4EF;         /* sage light */
+  --sm:#A8CDB8;         /* sage mid */
+  --sd:#1E5C3E;         /* sage dark */
+  --warm:#C4885A;       /* warm amber-brown — replaces terra/orange */
+  --wl:#FAF0E6;         /* warm light */
+  --wm:#E8C49A;         /* warm mid */
+  --mauve:#7A5C7A;      /* soft mauve/plum — replaces purple */
+  --ml:#F5EFF5;         /* mauve light */
+  --mm:#C4AAC4;         /* mauve mid */
+  --amber:#8C6E3C;      /* muted amber */
+  --al:#FBF5E6;         /* amber light */
+  --am:#D4B880;         /* amber mid */
+  --slate:#4A6480;      /* dusty slate blue */
+  --sll:#EBF0F5;        /* slate light */
+  --rose:#8C5C6E;       /* dusty rose — crisis, soft */
+  --rl:#F5EEF2;         /* rose light */
+  --cream:#FAF8F4;      /* warm cream bg */
+  --ww:#FFFDF9;         /* warmest white */
+  --ch:#2A2825;         /* charcoal */
+  --mid:#6B6660;        /* mid grey */
+  --light:#E4E0D8;      /* light border/divider */
+  --bdr:#D8D3CA;        /* border */
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;margin:0;}
+body{font-family:'DM Sans',sans-serif;background:#DDD9D0;color:var(--ch);min-height:100vh;height:auto;display:flex;justify-content:center;}
+.app{width:100%;max-width:480px;min-height:100vh;height:auto;background:var(--ww);display:flex;flex-direction:column;box-shadow:0 0 60px rgba(42,40,37,.2);}
+.header{background:var(--sage);padding:14px 20px 12px;position:sticky;top:0;z-index:200;}
+.hrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.logo{font-family:'Playfair Display',serif;font-size:17px;color:#fff;}
+.logo em{font-style:italic;color:var(--sm);}
+.lbtns{display:flex;gap:3px;}
+.lb{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.lb.on{background:rgba(255,255,255,.32);}
+.lb.abt{margin-right:6px;background:transparent;border-color:rgba(255,255,255,.4);}
+.lb.abt:hover{background:rgba(255,255,255,.15);}
+.cite-list{font-size:13px;color:var(--mid);line-height:1.7;padding-left:0;list-style:none;}
+.cite-list li{margin-bottom:10px;padding-left:14px;text-indent:-14px;}
+.cite-list li:before{content:"\2022";color:var(--sage);margin-right:8px;}
+.cite-list a{color:var(--sage);text-decoration:none;border-bottom:1px solid var(--sm);}
+.cite-list em{font-style:italic;}
+.pmeta{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
+.pmeta strong{color:#fff;font-size:11px;text-transform:none;letter-spacing:0;}
+.ptrack{height:4px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;}
+.pfill{height:100%;background:#fff;border-radius:2px;transition:width .5s ease;}
+.screen{display:none;flex:1;flex-direction:column;animation:fu .28s ease;}
+.screen.active{display:flex;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.sb{flex:1;padding:22px 20px 16px;display:flex;flex-direction:column;}
+.sf{padding:14px 20px 18px;background:var(--ww);border-top:1px solid var(--bdr);}
+.crisis-footer{padding:8px 20px 14px;text-align:center;font-size:11px;color:var(--mid);border-top:1px solid var(--bdr);background:var(--ww);}
+.crisis-footer a{color:var(--sage);text-decoration:none;}
+.sp{flex:1;min-height:10px;}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:14px;}
+.tag svg{width:11px;height:11px;flex-shrink:0;fill:currentColor;display:block;}
+.tc{background:var(--light);color:var(--mid);}
+.tm1{background:var(--sl);color:var(--sd);}
+.tm2{background:var(--wl);color:#5C3A1A;}       /* warm, not harsh orange */
+.tm3{background:var(--ml);color:#4A2A4A;}        /* soft mauve */
+.tm4{background:var(--al);color:#5C3808;}
+.ts{background:var(--sl);color:var(--sd);}
+.tfu{background:var(--ml);color:#4A2A4A;}
+
+/* TYPE */
+.title{font-family:'Playfair Display',serif;font-size:25px;line-height:1.22;color:var(--ch);margin-bottom:10px;}
+.title em{font-style:italic;color:var(--sage);}
+.bt{font-size:14px;color:var(--mid);line-height:1.68;margin-bottom:16px;}
+.bt strong{color:var(--ch);}
+.sh{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:8px;}
+
+/* BOXES — all use soft left borders or rounded containers */
+.baff{background:var(--sl);border-left:3px solid var(--sage);border-radius:0 10px 10px 0;padding:13px 15px;font-size:14px;color:var(--sd);line-height:1.62;margin-bottom:16px;font-style:italic;}
+/* Replaced harsh orange .bdis with warm, soft version */
+.bdis{background:var(--wl);border-left:3px solid var(--warm);border-radius:0 10px 10px 0;padding:13px 15px;font-size:14px;color:#5C3A1A;line-height:1.62;margin-bottom:16px;}
+.binf{background:var(--al);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#5C3808;line-height:1.62;margin-bottom:16px;display:flex;gap:8px;}
+.bpriv{background:var(--sl);border:1px solid var(--sm);border-radius:10px;padding:13px 15px;font-size:14px;color:var(--sd);line-height:1.62;margin-bottom:14px;display:flex;gap:11px;align-items:flex-start;}
+.bpriv .ico{flex-shrink:0;width:28px;height:28px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);}
+.bpriv .ico svg{width:15px;height:15px;display:block;fill:currentColor;}
+/* Plain info line: icon-in-badge + text, used inside .info-card or stand-alone */
+.iline{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--mid);line-height:1.6;margin-bottom:12px;}
+.iline:last-child{margin-bottom:0;}
+.iline .iico{flex-shrink:0;width:28px;height:28px;background:var(--sl);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);margin-top:0;}
+.iline .iico svg{width:15px;height:15px;display:block;fill:currentColor;}
+.iline strong{color:var(--ch);font-weight:500;}
+/* Soft grouping card for stacked info lines */
+.info-card{background:var(--cream);border:1px solid var(--bdr);border-radius:12px;padding:14px 16px;margin-bottom:18px;}
+/* Replaced sharp purple with soft mauve */
+.bplum{background:var(--ml);border-left:3px solid var(--mauve);border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#4A2A4A;line-height:1.62;margin-bottom:16px;}
+.bslate{background:var(--sll);border:1px solid #C0CCD8;border-radius:10px;padding:13px 15px;font-size:13px;color:#2A3C5C;line-height:1.62;margin-bottom:16px;}
+/* Replaced bright rose with dusty rose */
+.brose{background:var(--rl);border:1px solid #D4B8C4;border-radius:10px;padding:13px 15px;font-size:13px;color:#5C3048;line-height:1.62;margin-bottom:16px;}
+
+/* SECTION PHOTO: rounded card image, sits within content padding (not full-bleed) */
+.hero-photo{margin:4px 0 18px;height:240px;background:linear-gradient(135deg, var(--sl) 0%, var(--am) 60%, var(--ml) 100%);overflow:hidden;position:relative;border-radius:14px;}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block;}
+
+/* HORMONE CHART — line graph of estrogen + progesterone falling over the three stages */
+.hormone-chart{background:var(--cream);border-radius:12px;padding:12px 10px 6px;margin-top:10px;}
+.hormone-chart svg{display:block;width:100%;height:auto;}
+.stage-notes{display:flex;gap:6px;padding:8px 4px 2px;}
+.stage-note{flex:1;font-size:11px;color:var(--mid);line-height:1.45;text-align:center;padding:0 2px;}
+
+/* BODY MAP (m1b) — silhouette with symptom labels by region */
+.body-map{background:var(--cream);border-radius:12px;padding:14px 8px 10px;margin-bottom:16px;}
+.body-map-intro{font-size:12px;color:var(--mid);text-align:center;line-height:1.4;margin-bottom:6px;font-style:italic;}
+.body-map svg{display:block;width:100%;height:auto;max-width:380px;margin:0 auto;}
+
+/* OPTION MATRIX (m2) — symptom x option grid */
+.option-matrix{background:var(--cream);border-radius:12px;padding:14px 10px 8px;margin-bottom:18px;}
+.option-matrix-intro{font-size:12px;color:var(--mid);text-align:center;line-height:1.4;margin-bottom:8px;font-style:italic;}
+.option-matrix svg{display:block;width:100%;height:auto;}
+.option-matrix-legend{display:flex;justify-content:center;gap:16px;font-size:11px;color:var(--mid);margin-top:6px;flex-wrap:wrap;}
+.option-matrix-legend .lm-key{display:inline-flex;align-items:center;gap:5px;}
+.option-matrix-legend .lm-dot{display:inline-block;border-radius:50%;}
+.option-matrix-legend .lm-big{width:8px;height:8px;background:var(--sage);}
+.option-matrix-legend .lm-small{width:5px;height:5px;background:var(--sm);}
+
+/* FACT CARDS */
+.fc{background:#fff;border:1.5px solid var(--bdr);border-radius:14px;padding:18px;margin-bottom:14px;}
+.fct{font-size:15px;font-weight:500;color:var(--ch);margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.fct .ficon{flex-shrink:0;width:26px;height:26px;background:var(--sl);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);}
+.fct .ficon svg{width:14px;height:14px;display:block;fill:currentColor;}
+.fcb{font-size:14px;color:var(--mid);line-height:1.65;}
+.fcb strong{color:var(--ch);}
+.fch{background:var(--sl);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:13px;color:var(--sd);line-height:1.55;}
+.ck{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:13px;color:var(--mid);}
+.ckd{width:6px;height:6px;border-radius:50%;background:var(--sage);flex-shrink:0;margin-top:5px;}
+
+/* ELIGIBILITY */
+.eq{font-size:14px;font-weight:500;color:var(--ch);margin-bottom:8px;line-height:1.4;}
+.eopts{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.eopt{padding:12px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:14px;color:var(--mid);cursor:pointer;transition:all .15s;background:#fff;line-height:1.4;}
+.eopt.yes{border-color:var(--sage);background:var(--sl);color:var(--sd);font-weight:500;}
+.eopt.no{border-color:var(--warm);background:var(--wl);color:#5C3A1A;font-weight:500;}
+.enote{font-size:12px;color:var(--mid);margin-top:4px;line-height:1.5;}
+/* Replaced harsh red .emsg with soft warm */
+.emsg{display:none;background:var(--wl);border:1px solid var(--wm);border-radius:10px;padding:14px;font-size:14px;color:#5C3A1A;line-height:1.6;margin-top:10px;}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.chip{padding:8px 13px;border-radius:20px;font-size:13px;border:1.5px solid var(--bdr);background:#fff;color:var(--mid);cursor:pointer;transition:all .15s;user-select:none;}
+.chip.sel{background:var(--sl);border-color:var(--sage);color:var(--sd);font-weight:500;}
+
+/* SYMPTOM DETAIL */
+.sdtl{display:none;background:linear-gradient(135deg,var(--sl),var(--al));border:1px solid var(--sm);border-radius:12px;padding:16px;margin-bottom:16px;animation:fu .3s ease;}
+.sdtl.show{display:block;}
+.sdtl-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--sd);margin-bottom:10px;}
+.sdtl-items{display:flex;flex-direction:column;gap:8px;}
+.sdtl-item{background:rgba(255,255,255,.6);border-radius:8px;padding:10px 12px;}
+.sdtl-name{font-size:13px;font-weight:500;color:var(--ch);margin-bottom:3px;}
+.sdtl-why{font-size:12px;color:var(--mid);line-height:1.5;}
+
+/* OPTIONS */
+.olist{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.ocard{border:1.5px solid var(--bdr);border-radius:14px;overflow:hidden;background:#fff;transition:border-color .2s;}
+/* Replaced terra with warm amber */
+.ocard.open{border-color:var(--warm);}
+.ohdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;}
+.oico{flex-shrink:0;width:36px;height:36px;background:var(--sl);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);}
+.oico svg{width:18px;height:18px;display:block;fill:currentColor;}
+.otw{flex:1;}
+.oname{font-size:14px;font-weight:500;color:var(--ch);margin-bottom:2px;}
+.otag{font-size:12px;color:var(--mid);}
+.ochev{font-size:16px;color:var(--mid);transition:transform .25s;flex-shrink:0;}
+.ocard.open .ochev{transform:rotate(90deg);color:var(--warm);}
+.odrw{display:none;padding:0 16px 16px;}
+.ocard.open .odrw{display:block;}
+.osec{margin-bottom:12px;}
+.oslbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.lh{color:var(--sd);}
+.lc{color:var(--amber);}
+.lq{color:var(--warm);}
+.la{color:var(--slate);}
+.osb{font-size:13px;color:var(--mid);line-height:1.6;}
+.osb em{font-style:italic;color:var(--warm);}
+.odiv{height:1px;background:var(--bdr);margin-bottom:12px;}
+.oaccess{background:var(--sll);border-radius:8px;padding:10px 12px;font-size:12px;color:#2A3C5C;line-height:1.55;margin-top:6px;}
+.oaccess a{color:var(--slate);text-decoration:none;font-weight:500;}
+
+/* VALUES */
+.vlist{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.vrow{background:#fff;border:1.5px solid var(--bdr);border-radius:12px;padding:14px 16px;transition:border-color .15s;}
+.vrow.done{border-color:var(--mm);}
+.vstmt{font-size:14px;color:var(--ch);line-height:1.5;margin-bottom:10px;}
+.vbtns{display:flex;gap:6px;}
+.vb{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;border:1.5px solid var(--bdr);background:#fff;color:var(--mid);cursor:pointer;text-align:center;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.vb:hover{border-color:var(--mauve);color:var(--mauve);}
+.vb.sel{background:var(--ml);border-color:var(--mauve);color:var(--mauve);font-weight:500;}
+.vrefl{background:var(--ml);border:1px solid var(--mm);border-radius:10px;padding:14px;margin-top:8px;font-size:14px;color:#4A2A4A;line-height:1.65;min-height:52px;font-style:italic;}
+
+/* ACTIONS */
+.alist{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.acard{border:1.5px solid var(--bdr);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;background:#fff;display:flex;gap:12px;align-items:flex-start;}
+.acard:hover{border-color:var(--amber);}
+.acard.sel{border-color:var(--amber);background:var(--al);}
+.aico{flex-shrink:0;width:34px;height:34px;background:var(--sl);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);margin-top:0;}
+.aico svg{width:17px;height:17px;display:block;fill:currentColor;}
+.atxt{font-size:14px;color:var(--ch);line-height:1.5;}
+.adetail{display:none;margin-top:8px;background:var(--sll);border-radius:8px;padding:10px 12px;font-size:13px;color:#2A3C5C;line-height:1.55;}
+.adetail.show{display:block;}
+.adetail a{color:var(--slate);font-weight:500;text-decoration:none;}
+.wo{border:1.5px dashed var(--bdr);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--mid);background:#fff;width:100%;font-family:'DM Sans',sans-serif;resize:none;outline:none;transition:border-color .15s;margin-bottom:14px;line-height:1.5;}
+.wo:focus{border-color:var(--amber);color:var(--ch);}
+
+/* SUMMARY */
+.sumhero{background:linear-gradient(145deg,var(--sl) 0%,var(--al) 60%,var(--ml) 100%);border:1px solid var(--sm);border-radius:16px;padding:22px;margin-bottom:16px;}
+.sbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.sbs{color:var(--sage);}
+.sba{color:var(--amber);}
+.sprior{font-size:15px;color:var(--ch);line-height:1.6;font-family:'Playfair Display',serif;margin-bottom:14px;}
+.sdivs{height:1px;background:rgba(61,122,92,.2);margin:12px 0;}
+.satext{font-size:16px;color:var(--ch);line-height:1.5;font-family:'Playfair Display',serif;}
+.senc{font-size:13px;color:var(--mid);font-style:italic;margin-top:12px;line-height:1.55;border-top:1px solid rgba(61,122,92,.15);padding-top:12px;}
+.snext{background:rgba(255,255,255,.7);border-radius:10px;padding:12px;margin-top:14px;}
+.snext-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--slate);margin-bottom:5px;}
+.snext-body{font-size:13px;color:#2A3C5C;line-height:1.55;}
+.snext-body a{color:var(--slate);font-weight:500;text-decoration:none;}
+.pbar{display:flex;gap:8px;margin-bottom:16px;}
+.pbtn{flex:1;background:#fff;border:1.5px solid var(--bdr);border-radius:10px;padding:11px;font-size:13px;color:var(--mid);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.pbtn:hover{border-color:var(--sage);color:var(--sage);}
+.pbtn svg{width:14px;height:14px;flex-shrink:0;fill:currentColor;}
+
+/* RESOURCES */
+.rsec{margin-bottom:18px;}
+.rtitle{font-size:13px;font-weight:500;color:var(--ch);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.rtitle svg{width:14px;height:14px;flex-shrink:0;fill:currentColor;display:block;}
+.rgl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin:10px 0 6px;}
+.ri{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--bdr);border-radius:10px;margin-bottom:6px;text-decoration:none;transition:border-color .15s;}
+.ri:hover{border-color:var(--sage);}
+.rd{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;margin-top:5px;}
+.rinfo{flex:1;}
+.rn{font-size:13px;font-weight:500;color:var(--ch);margin-bottom:2px;}
+.rdesc{font-size:11px;color:var(--mid);line-height:1.45;}
+.rfree{display:inline-block;font-size:10px;font-weight:500;background:var(--sl);color:var(--sd);padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;}
+.rarrow{font-size:14px;color:var(--bdr);flex-shrink:0;margin-top:3px;}
+
+/* FOLLOW-UP */
+.fuitems{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.fuitem{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--bdr);border-radius:10px;font-size:13px;color:var(--ch);}
+.fuchk{flex-shrink:0;width:18px;height:18px;color:var(--sage);display:flex;align-items:center;justify-content:center;}
+.fuchk svg{width:16px;height:16px;display:block;fill:currentColor;}
+
+/* BUTTONS */
+.btn{width:100%;background:var(--sage);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;letter-spacing:.01em;}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 16px rgba(61,122,92,.28);}
+.btn:active{transform:translateY(0);box-shadow:none;}
+.btn.ter{background:var(--warm);}
+.btn.plm{background:var(--mauve);}
+.btn.amb{background:var(--amber);}
+/* Soft gate: Next button is grayed out until user has engaged with the screen */
+.btn.locked{background:var(--bdr);color:var(--mid);cursor:not-allowed;}
+.btn.locked:hover{filter:none;transform:none;box-shadow:none;}
+.btn.locked:active{transform:none;}
+.gate-hint{font-size:12px;color:var(--mid);text-align:center;margin-top:8px;font-style:italic;display:none;}
+.gate-hint.show{display:block;}
+.btng{width:100%;background:transparent;border:1.5px solid var(--bdr);color:var(--mid);border-radius:12px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;margin-top:8px;}
+.btng:hover{border-color:var(--sage);color:var(--sage);}
+.bbar{background:var(--cream);border-top:1px solid var(--bdr);padding:9px 20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.bbtn{background:none;border:1px solid var(--bdr);border-radius:7px;padding:6px 14px;font-size:12px;color:var(--mid);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.bbtn:hover{border-color:var(--sage);color:var(--sage);background:var(--sl);}
+.bbtn.reset:hover{border-color:var(--rose);color:var(--rose);background:var(--rl);}
+.ndots{padding:10px 20px 12px;display:flex;justify-content:center;gap:5px;border-top:1px solid var(--bdr);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--light);cursor:pointer;transition:all .25s;}
+.dot.active{background:var(--sage);width:22px;border-radius:4px;}
+.dot.done{background:var(--sm);}
+
+/* WELCOME */
+.whero{text-align:center;padding:16px 0 14px;}
+.wemb{width:78px;height:78px;border-radius:50%;background:var(--sl);border:2px solid var(--sm);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:34px;}
+.wemb svg{width:42px;height:42px;fill:var(--sage);}
+.wtitle{font-family:'Playfair Display',serif;font-size:28px;line-height:1.2;color:var(--ch);margin-bottom:10px;}
+.wtitle em{font-style:italic;color:var(--sage);}
+.lrow{display:flex;gap:8px;margin-top:10px;}
+.lrb{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--bdr);background:#fff;font-size:13px;color:var(--mid);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.lrb:hover{border-color:var(--sage);color:var(--sage);}
+
+/* M1 sub-nav */
+.sdots{display:flex;justify-content:center;gap:5px;margin-bottom:18px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--bdr);transition:all .2s;}
+.sdot.active{background:var(--sage);width:18px;border-radius:3px;}
+.sdot.done{background:var(--sm);}
+.snbtns{display:flex;gap:8px;}
+.snback{width:44px;background:#fff;border:1.5px solid var(--bdr);color:var(--mid);border-radius:12px;padding:12px;font-size:18px;cursor:pointer;transition:all .15s;}
+.snback:hover{border-color:var(--sage);color:var(--sage);}
+
+/* EMOTIONAL SECTION */
+.emo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.emo-card{background:#fff;border:1.5px solid var(--bdr);border-radius:12px;padding:13px;}
+.emo-icon{width:32px;height:32px;background:var(--sl);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sd);margin-bottom:8px;}
+.emo-icon svg{width:16px;height:16px;display:block;fill:currentColor;}
+.emo-name{font-size:13px;font-weight:500;color:var(--ch);margin-bottom:4px;}
+.emo-desc{font-size:12px;color:var(--mid);line-height:1.5;}
+@media print{.header,.ndots,.bbar,.sf,.btn,.btng,.pbar,.crisis-footer{display:none!important;}.sumhero{box-shadow:none;border:2px solid #ccc;}.app{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="hrow">
+    <div class="logo">Menopause <em>Navigator</em></div>
+    <div class="lbtns">
+      <button class="lb abt" onclick="openAbout()" data-en="&#9432; About" data-es="&#9432; Acerca">&#9432; About</button>
+      <button class="lb on" onclick="setL('en',this)">EN</button>
+      <button class="lb" onclick="setL('es',this)">ES</button>
+    </div>
+  </div>
+  <div class="pmeta"><span class="pj-lbl">Your journey</span> <strong id="plbl">Eligibility check</strong></div>
+  <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
+</div>
+
+<!-- S0 CONSENT / WELCOME -->
+<div class="screen active" id="s0">
+<div class="sb">
+  <div class="whero">
+    <div class="wemb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg></div>
+    <div class="wtitle" data-en="Your health.<br>Your journey.<br><em>Your terms.</em>" data-es="Tu salud.<br>Tu camino.<br><em>Tus t&#233;rminos.</em>">Your health.<br>Your journey.<br><em>Your terms.</em></div>
+  </div>
+  <div class="bt" data-en="This tool walks you through what is happening in your body, what your options are, and how to get care in Chicago. The choices are <strong>yours</strong>." data-es="Esta herramienta te explica qu&#233; pasa en tu cuerpo, qu&#233; opciones tienes, y c&#243;mo recibir atenci&#243;n en Chicago. Las decisiones son <strong>tuyas</strong>.">This tool walks you through what is happening in your body, what your options are, and how to get care in Chicago. The choices are <strong>yours</strong>.</div>
+  <div class="bslate" data-en="<strong>Why this exists:</strong> to help you understand your body and your options. This is not medical advice. For care that fits you specifically, talk to a provider you trust." data-es="<strong>Por qu&#233; existe esto:</strong> para ayudarte a entender tu cuerpo y tus opciones. Esto no es consejo m&#233;dico. Para atenci&#243;n que se ajuste a ti espec&#237;ficamente, habla con un proveedor de confianza."><strong>Why this exists:</strong> to help you understand your body and your options. This is not medical advice. For care that fits you specifically, talk to a provider you trust.</div>
+  <div class="info-card">
+    <div class="iline"><span class="iico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 1a5 5 0 0 0-5 5v3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3h-1V6a5 5 0 0 0-5-5zm3 8V6a3 3 0 1 0-6 0v3h6z" clip-rule="evenodd"/></svg></span><span data-en="<strong>Private.</strong> Nothing you type here leaves this device. Your name is not on anything. If you share this device, use &#8216;Start over&#8217; when you finish." data-es="<strong>Privado.</strong> Nada de lo que escribas aqu&#237; sale de este dispositivo. Tu nombre no est&#225; en nada. Si compartes este dispositivo, usa &#8216;Empezar de nuevo&#8217; cuando termines."><strong>Private.</strong> Nothing you type here leaves this device. Your name is not on anything. If you share this device, use &#8216;Start over&#8217; when you finish.</span></div>
+    <div class="iline"><span class="iico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm.75-14a.75.75 0 0 0-1.5 0v4c0 .2.08.39.22.53l3 3a.75.75 0 1 0 1.06-1.06l-2.78-2.78V8z" clip-rule="evenodd"/></svg></span><span data-en="<strong>About 25 minutes.</strong> You can stop and come back any time; your progress is saved." data-es="<strong>Como 25 minutos.</strong> Puedes parar y volver cuando quieras; tu progreso queda guardado."><strong>About 25 minutes.</strong> You can stop and come back any time; your progress is saved.</span></div>
+    <div class="iline"><span class="iico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7.5 5.25a3 3 0 0 1 3-3h3a3 3 0 0 1 3 3v.205c.933.085 1.857.197 2.774.334 1.454.218 2.476 1.483 2.476 2.917v3.033c0 1.211-.734 2.352-1.936 2.752A24.91 24.91 0 0 1 12 15.75c-2.730 0-5.357-.438-7.814-1.259-1.202-.4-1.936-1.541-1.936-2.752V8.706c0-1.434 1.022-2.7 2.476-2.917A48.81 48.81 0 0 1 7.5 5.455v-.205zm6 0v.16a51 51 0 0 0-6 0v-.16a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5zm-3 8.25a.75.75 0 1 0 0 1.5h.008a.75.75 0 1 0 0-1.5h-.008z" clip-rule="evenodd"/></svg></span><span data-en="<strong>What is next:</strong> a few short questions about how this went. Your answers stay private." data-es="<strong>Lo que sigue:</strong> unas preguntas cortas sobre c&#243;mo te fue. Tus respuestas quedan privadas."><strong>What is next:</strong> a few short questions about how this went. Your answers stay private.</span></div>
+  </div>
+  <div class="sp"></div>
+  <div class="lrow">
+    <button class="lrb" onclick="setL('en')">English</button>
+    <button class="lrb" onclick="setL('es')">Espa&#241;ol</button>
+  </div>
+</div>
+<div class="sf"><button class="btn" onclick="goTo(1)" data-en="I understand. Let&#8217;s begin &#8594;" data-es="Entiendo. Empecemos &#8594;">I understand. Let&#8217;s begin &#8594;</button></div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S1 MODULE 1 (4 sub-screens) -->
+<div class="screen" id="s1">
+<div class="sb">
+  <div class="tag tm1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg><span data-en="Module 1: understanding your body" data-es="M&#243;dulo 1: entendiendo tu cuerpo">Module 1: understanding your body</span></div>
+  <div class="sdots">
+    <div class="sdot active" id="sd0"></div>
+    <div class="sdot" id="sd1"></div>
+    <div class="sdot" id="sd2"></div>
+    <div class="sdot" id="sd3"></div>
+  </div>
+
+  <!-- SUB A: What is happening -->
+  <div id="m1a">
+    <div class="title" data-en="What is happening in your body?" data-es="&#191;Qu&#233; est&#225; pasando en tu cuerpo?">What is happening in your body?</div>
+    <div class="bt" data-en="Menopause is a natural change. Most women never get it explained. Let&#8217;s change that." data-es="La menopausia es un cambio natural. A la mayor&#237;a nunca se lo explican. Vamos a cambiar eso.">Menopause is a natural change. Most women never get it explained. Let&#8217;s change that.</div>
+    <!-- Section photo: community shot of midlife women at a caf&#233;. Local asset so it works offline. To swap, replace src with a new file path or URL. If src fails to load, the soft gradient fallback shows. -->
+    <div class="hero-photo"><img src="community-cafe.jpg" alt="Five midlife women of different backgrounds sitting and talking at an outdoor caf&#233; table" onerror="this.style.display='none'"></div>
+    <div class="fc"><div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg></span><span data-en="Your hormones are changing" data-es="Tus hormonas est&#225;n cambiando">Your hormones are changing</span></div><div class="fcb" data-en="As you age, your ovaries make less <strong>estrogen</strong> and <strong>progesterone</strong>. These hormones do more than control your period. They also shape sleep, mood, memory, and bones. When they start to fall, that is <strong>perimenopause</strong>. After 12 months with no period, you have reached <strong>menopause</strong>." data-es="Al envejecer, tus ovarios producen menos <strong>estr&#243;geno</strong> y <strong>progesterona</strong>. Estas hormonas hacen m&#225;s que controlar el per&#237;odo. Tambi&#233;n influyen en el sue&#241;o, el &#225;nimo, la memoria y los huesos. Cuando empiezan a bajar, eso es <strong>perimenopausia</strong>. Despu&#233;s de 12 meses sin per&#237;odo, has llegado a la <strong>menopausia</strong>.">As you age, your ovaries make less <strong>estrogen</strong> and <strong>progesterone</strong>. These hormones do more than control your period. They also shape sleep, mood, memory, and bones. When they start to fall, that is <strong>perimenopause</strong>. After 12 months with no period, you have reached <strong>menopause</strong>.</div></div>
+    <div class="fc"><div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75zM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0zM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59zM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75zM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591zM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18zM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59zM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12zM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591z"/></svg></span><span data-en="Why it may feel harder for you" data-es="Por qu&#233; puede sentirse m&#225;s dif&#237;cil para ti">Why it may feel harder for you</span></div><div class="fcb" data-en="Poverty, racism, trauma, and time in jail wear on the body and can speed up how it ages inside. The change may start in your early or mid 40s, and symptoms can feel stronger.<div class=&quot;fch&quot;>None of this is your fault. Your body is responding to what it has been through.</div>" data-es="La pobreza, el racismo, el trauma y el tiempo en la c&#225;rcel desgastan el cuerpo y pueden acelerar c&#243;mo envejece por dentro. El cambio puede empezar a inicios o mediados de tus 40s, y los s&#237;ntomas pueden sentirse m&#225;s fuertes.<div class=&quot;fch&quot;>Nada de esto es tu culpa. Tu cuerpo responde a lo que ha pasado.</div>">Poverty, racism, trauma, and time in jail wear on the body and can speed up how it ages inside. The change may start in your early or mid 40s, and symptoms can feel stronger.<div class="fch">None of this is your fault. Your body is responding to what it has been through.</div></div></div>
+    <div class="fc"><div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9a9 9 0 0 0-15.059 4.043.75.75 0 0 0 1.45.38zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.043.75.75 0 0 0-.53-.92z" clip-rule="evenodd"/></svg></span><span data-en="How hormones change over time" data-es="C&#243;mo cambian las hormonas con el tiempo">How hormones change over time</span></div>
+      <div class="fcb" data-en="Estrogen and progesterone do not drop all at once. They fall slowly over years, with the biggest shift during perimenopause." data-es="El estr&#243;geno y la progesterona no bajan de golpe. Caen poco a poco a lo largo de los a&#241;os, con el cambio m&#225;s grande durante la perimenopausia.">Estrogen and progesterone do not drop all at once. They fall slowly over years, with the biggest shift during perimenopause.</div>
+      <div class="hormone-chart">
+        <svg viewBox="0 0 360 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hormone-chart-title">
+          <title id="hormone-chart-title">Estrogen and progesterone slowly fall during the three stages of menopause</title>
+          <rect x="0" y="10" width="140" height="100" fill="#EAF4EF" rx="4"/>
+          <rect x="148" y="10" width="60" height="100" fill="#FAF0E6" rx="4"/>
+          <rect x="216" y="10" width="144" height="100" fill="#F5EFF5" rx="4"/>
+          <line x1="0" y1="118" x2="360" y2="118" stroke="#D8D3CA" stroke-width="1"/>
+          <path d="M 0 30 C 60 34, 100 42, 140 60 C 170 88, 200 105, 220 110 C 280 115, 320 117, 360 117" stroke="#3D7A5C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 0 48 C 60 52, 100 60, 140 80 C 170 100, 200 110, 220 114 C 280 116, 320 117, 360 117" stroke="#7A5C7A" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="4 3"/>
+          <text x="70" y="138" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#2A2825" data-en="1. Perimenopause" data-es="1. Perimenopausia">1. Perimenopause</text>
+          <text x="178" y="138" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#2A2825" data-en="2. Menopause" data-es="2. Menopausia">2. Menopause</text>
+          <text x="288" y="138" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#2A2825" data-en="3. Postmenopause" data-es="3. Posmenopausia">3. Postmenopause</text>
+          <line x1="206" y1="20" x2="222" y2="20" stroke="#3D7A5C" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="226" y="23" font-family="DM Sans, sans-serif" font-size="9" fill="#3D7A5C" data-en="Estrogen" data-es="Estr&#243;geno">Estrogen</text>
+          <line x1="270" y1="20" x2="286" y2="20" stroke="#7A5C7A" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+          <text x="290" y="23" font-family="DM Sans, sans-serif" font-size="9" fill="#7A5C7A" data-en="Progesterone" data-es="Progesterona">Progesterone</text>
+        </svg>
+      </div>
+      <div class="stage-notes">
+        <div class="stage-note" data-en="Hormones start to fall. Periods change." data-es="Las hormonas empiezan a bajar. El per&#237;odo cambia.">Hormones start to fall. Periods change.</div>
+        <div class="stage-note" data-en="12 months with no period." data-es="12 meses sin per&#237;odo.">12 months with no period.</div>
+        <div class="stage-note" data-en="All the years after." data-es="Todos los a&#241;os despu&#233;s.">All the years after.</div>
+      </div>
+    </div>
+    <div class="sp"></div>
+  </div>
+
+  <!-- SUB B: Physical symptoms with explanations -->
+  <div id="m1b" style="display:none">
+    <div class="title" data-en="Your physical symptoms are <em>real</em>" data-es="Tus s&#237;ntomas f&#237;sicos son <em>reales</em>">Your physical symptoms are <em>real</em></div>
+    <div class="bt" data-en="Tap any symptoms you have felt. We will explain what is causing each one." data-es="Toca los s&#237;ntomas que has sentido. Te explicaremos qu&#233; causa cada uno.">Tap any symptoms you have felt. We will explain what is causing each one.</div>
+    <div class="body-map">
+      <div class="body-map-intro" data-en="Menopause is a whole-body change. Here is where it shows up." data-es="La menopausia es un cambio en todo el cuerpo. Aqu&#237; es donde aparece.">Menopause is a whole-body change. Here is where it shows up.</div>
+      <svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="bodymap-title">
+        <title id="bodymap-title">Body map showing where menopause symptoms appear: head, chest, pelvis, joints, and whole body</title>
+        <!-- Soft warm aura behind the figure -->
+        <defs>
+          <radialGradient id="body-aura" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#FAF0E6" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#FAF0E6" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="body-warm" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FBF5E6"/>
+            <stop offset="100%" stop-color="#F5E0C6"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="180" cy="150" rx="120" ry="135" fill="url(#body-aura)"/>
+
+        <!-- Head: warm-tinted oval -->
+        <ellipse cx="180" cy="34" rx="15" ry="17" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3"/>
+        <!-- Neck: smooth taper -->
+        <path d="M 172 50 Q 173 56 171 62 Q 180 64 189 62 Q 187 56 188 50 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+        <!-- Torso: shoulders flow into waist into hips with continuous curves -->
+        <path d="M 168 62 Q 156 64 150 78 Q 146 100 152 118 Q 148 132 150 148 Q 152 168 158 184 L 202 184 Q 208 168 210 148 Q 212 132 208 118 Q 214 100 210 78 Q 204 64 192 62 Q 186 64 180 64 Q 174 64 168 62 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+        <!-- Arms: curved leaf shapes (wider at shoulder, taper to wrist) -->
+        <path d="M 150 72 Q 138 86 138 112 Q 140 142 148 152 Q 154 150 154 142 Q 156 116 156 92 Q 156 76 150 72 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M 210 72 Q 222 86 222 112 Q 220 142 212 152 Q 206 150 206 142 Q 204 116 204 92 Q 204 76 210 72 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+        <!-- Legs: curved leaf shapes (wider at thigh, taper to ankle) -->
+        <path d="M 158 184 Q 154 210 158 240 Q 162 258 170 262 Q 178 260 178 250 Q 180 220 180 195 Q 180 186 178 184 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M 202 184 Q 206 210 202 240 Q 198 258 190 262 Q 182 260 182 250 Q 180 220 180 195 Q 180 186 182 184 Z" fill="url(#body-warm)" stroke="#8C6E3C" stroke-width="1.3" stroke-linejoin="round"/>
+
+        <!-- Symptom markers: warm amber with soft ring -->
+        <circle cx="180" cy="34" r="7" fill="#C4885A" opacity="0.2"/>
+        <circle cx="180" cy="34" r="4.5" fill="#C4885A"/>
+        <circle cx="180" cy="98" r="7" fill="#C4885A" opacity="0.2"/>
+        <circle cx="180" cy="98" r="4.5" fill="#C4885A"/>
+        <circle cx="180" cy="172" r="7" fill="#C4885A" opacity="0.2"/>
+        <circle cx="180" cy="172" r="4.5" fill="#C4885A"/>
+        <circle cx="192" cy="225" r="7" fill="#C4885A" opacity="0.2"/>
+        <circle cx="192" cy="225" r="4.5" fill="#C4885A"/>
+
+        <!-- Connector lines: soft warm tone -->
+        <line x1="78" y1="34" x2="172" y2="34" stroke="#E8C49A" stroke-width="1.2"/>
+        <line x1="78" y1="98" x2="172" y2="98" stroke="#E8C49A" stroke-width="1.2"/>
+        <line x1="280" y1="172" x2="188" y2="172" stroke="#E8C49A" stroke-width="1.2"/>
+        <line x1="280" y1="225" x2="200" y2="225" stroke="#E8C49A" stroke-width="1.2"/>
+
+        <!-- Labels: HEAD (left) -->
+        <text x="74" y="24" text-anchor="end" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" fill="#2A2825" data-en="Head" data-es="Cabeza">Head</text>
+        <text x="74" y="38" text-anchor="end" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="brain fog, mood, sleep" data-es="lagunas, &#225;nimo, sue&#241;o">brain fog, mood, sleep</text>
+
+        <!-- Labels: CHEST (left) -->
+        <text x="74" y="88" text-anchor="end" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" fill="#2A2825" data-en="Chest" data-es="Pecho">Chest</text>
+        <text x="74" y="102" text-anchor="end" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="hot flashes, night" data-es="sofocos, sudores">hot flashes, night</text>
+        <text x="74" y="114" text-anchor="end" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="sweats, palpitations" data-es="nocturnos, palpitaciones">sweats, palpitations</text>
+
+        <!-- Labels: PELVIC (right) -->
+        <text x="284" y="162" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" fill="#2A2825" data-en="Pelvis" data-es="Pelvis">Pelvis</text>
+        <text x="284" y="176" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="period changes," data-es="cambios de per&#237;odo,">period changes,</text>
+        <text x="284" y="188" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="bladder, dryness" data-es="vejiga, sequedad">bladder, dryness</text>
+
+        <!-- Labels: JOINTS (right) -->
+        <text x="284" y="215" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" fill="#2A2825" data-en="Joints" data-es="Articulaciones">Joints</text>
+        <text x="284" y="229" font-family="DM Sans, sans-serif" font-size="10" fill="#6B6660" data-en="pain, stiffness" data-es="dolor, rigidez">pain, stiffness</text>
+
+        <!-- Whole-body caption -->
+        <text x="180" y="272" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10.5" font-style="italic" fill="#3D7A5C" data-en="Fatigue and weight changes affect the whole body." data-es="El cansancio y los cambios de peso afectan todo el cuerpo.">Fatigue and weight changes affect the whole body.</text>
+      </svg>
+    </div>
+    <div class="chips" id="schips">
+      <div class="chip" onclick="chipSel(this,'hf')" data-en="Hot flashes" data-es="Sofocos">Hot flashes</div>
+      <div class="chip" onclick="chipSel(this,'ns')" data-en="Night sweats" data-es="Sudores nocturnos">Night sweats</div>
+      <div class="chip" onclick="chipSel(this,'sl')" data-en="Trouble sleeping" data-es="Problemas para dormir">Trouble sleeping</div>
+      <div class="chip" onclick="chipSel(this,'jp')" data-en="Joint pain" data-es="Dolor en las articulaciones">Joint pain</div>
+      <div class="chip" onclick="chipSel(this,'ip')" data-en="Irregular periods" data-es="Per&#237;odos irregulares">Irregular periods</div>
+      <div class="chip" onclick="chipSel(this,'bl')" data-en="Bladder changes" data-es="Cambios en la vejiga">Bladder changes</div>
+      <div class="chip" onclick="chipSel(this,'vd')" data-en="Vaginal dryness" data-es="Sequedad vaginal">Vaginal dryness</div>
+      <div class="chip" onclick="chipSel(this,'wt')" data-en="Weight changes" data-es="Cambios de peso">Weight changes</div>
+      <div class="chip" onclick="chipSel(this,'hp')" data-en="Heart pounding" data-es="Palpitaciones del coraz&#243;n">Heart pounding</div>
+    </div>
+    <div class="sdtl" id="sdtl"></div>
+    <div class="baff" id="phys-affirm" style="display:none" data-en="Every symptom you tapped has a real cause in your body. You are not making it up. These are real symptoms with real names, and you deserve care that takes them seriously." data-es="Cada s&#237;ntoma que tocaste tiene una causa real en tu cuerpo. No te lo est&#225;s inventando. Son s&#237;ntomas reales con nombres reales, y mereces atenci&#243;n que los tome en serio.">Every symptom you tapped has a real cause in your body. You are not making it up. These are real symptoms with real names, and you deserve care that takes them seriously.</div>
+    <div class="sp"></div>
+  </div>
+
+  <!-- SUB C: Emotional / psychological symptoms -->
+  <div id="m1c" style="display:none">
+    <div class="title" data-en="What about how you are feeling inside?" data-es="&#191;Y c&#243;mo te sientes por dentro?">What about how you are feeling inside?</div>
+    <div class="bt" data-en="Emotional symptoms are just as real as the physical ones. People talk about them much less, so women often blame themselves without knowing that hormones are behind it." data-es="Los s&#237;ntomas emocionales son tan reales como los f&#237;sicos. Se habla mucho menos de ellos, as&#237; que muchas mujeres terminan culp&#225;ndose sin saber que las hormonas est&#225;n detr&#225;s.">Emotional symptoms are just as real as the physical ones. People talk about them much less, so women often blame themselves without knowing that hormones are behind it.</div>
+    <div class="brose" data-en="<strong>If you have been feeling &#8220;off&#8221; inside, this may be why.</strong> Estrogen helps balance the brain chemicals that control mood, worry, and memory. When estrogen drops, those chemicals shift." data-es="<strong>Si te has estado sintiendo &#8220;fuera de lugar&#8221; por dentro, esta puede ser la raz&#243;n.</strong> El estr&#243;geno ayuda a equilibrar los qu&#237;micos del cerebro que controlan el &#225;nimo, la preocupaci&#243;n y la memoria. Cuando el estr&#243;geno baja, esos qu&#237;micos cambian."><strong>If you have been feeling &#8220;off&#8221; inside, this may be why.</strong> Estrogen helps balance the brain chemicals that control mood, worry, and memory. When estrogen drops, those chemicals shift.</div>
+    <div class="emo-grid">
+      <div class="emo-card"><div class="emo-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.75a6 6 0 0 1 11.573-2.226 3.75 3.75 0 0 1 4.133 4.303A4.5 4.5 0 0 1 18 20.25H6.75a5.25 5.25 0 0 1-2.23-10.004 6.072 6.072 0 0 1-.02-.496z"/></svg></div><div class="emo-name" data-en="Brain fog" data-es="Lagunas mentales">Brain fog</div><div class="emo-desc" data-en="Forgetting things, trouble focusing, or feeling slow in your head. This happens because estrogen helps your brain work." data-es="Olvidos, problemas para concentrarte, o sentirte lenta de la cabeza. Esto pasa porque el estr&#243;geno ayuda a que tu cerebro funcione.">Forgetting things, trouble focusing, or feeling slow in your head. This happens because estrogen helps your brain work.</div></div>
+      <div class="emo-card"><div class="emo-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162z" clip-rule="evenodd"/></svg></div><div class="emo-name" data-en="Low mood" data-es="&#193;nimo bajo">Low mood</div><div class="emo-desc" data-en="Feeling sad, flat, or teary for no clear reason. This is tied to how estrogen shapes the chemicals in your brain that help you feel good." data-es="Sentirte triste, sin emoci&#243;n, o con ganas de llorar sin raz&#243;n clara. Esto se conecta con c&#243;mo el estr&#243;geno influye en los qu&#237;micos del cerebro que te ayudan a sentirte bien.">Feeling sad, flat, or teary for no clear reason. This is tied to how estrogen shapes the chemicals in your brain that help you feel good.</div></div>
+      <div class="emo-card"><div class="emo-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143z" clip-rule="evenodd"/></svg></div><div class="emo-name" data-en="Worry and anxiety" data-es="Preocupaci&#243;n y ansiedad">Worry and anxiety</div><div class="emo-desc" data-en="Feeling on edge or overwhelmed more than usual. This is tied to how hormones affect the way your body handles stress." data-es="Sentirte tensa o agobiada m&#225;s de lo normal. Esto se conecta con c&#243;mo las hormonas afectan la manera en que tu cuerpo maneja el estr&#233;s.">Feeling on edge or overwhelmed more than usual. This is tied to how hormones affect the way your body handles stress.</div></div>
+      <div class="emo-card"><div class="emo-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248zM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718z" clip-rule="evenodd"/></svg></div><div class="emo-name" data-en="Easily upset" data-es="Irritabilidad">Easily upset</div><div class="emo-desc" data-en="Feeling frustrated or short-tempered more easily than before. This is a real hormone symptom, not a change in who you are." data-es="Sentirte frustrada o de mal humor m&#225;s f&#225;cilmente que antes. Es un s&#237;ntoma real de las hormonas, no un cambio en qui&#233;n eres.">Feeling frustrated or short-tempered more easily than before. This is a real hormone symptom, not a change in who you are.</div></div>
+    </div>
+    <div class="baff" data-en="You are not losing your mind. These are real body symptoms with real ways to treat them, and you deserve help." data-es="No est&#225;s perdiendo la cabeza. Son s&#237;ntomas reales del cuerpo con maneras reales de tratarlos, y mereces ayuda.">You are not losing your mind. These are real body symptoms with real ways to treat them, and you deserve help.</div>
+    <div class="sp"></div>
+  </div>
+
+  <!-- SUB D: Trust building -->
+  <div id="m1d" style="display:none">
+    <div class="title" data-en="Before we talk about options" data-es="Antes de hablar de opciones">Before we talk about options</div>
+    <div class="bt" data-en="We want to say something important first." data-es="Queremos decir algo importante primero.">We want to say something important first.</div>
+    <div class="bdis" data-en="<strong>Many women in our community have been hurt by healthcare:</strong> told their symptoms are an attitude problem, rushed through visits, denied medicine, or had their pain ignored. If that has happened to you, being careful or unsure is a fair response to a system that has let you down." data-es="<strong>A muchas mujeres de nuestra comunidad las ha lastimado el sistema de salud:</strong> les dicen que sus s&#237;ntomas son un problema de actitud, las apuran en las citas, les niegan medicina, o ignoran su dolor. Si eso te ha pasado, sentirte insegura es una respuesta justa a un sistema que te ha fallado."><strong>Many women in our community have been hurt by healthcare:</strong> told their symptoms are an attitude problem, rushed through visits, denied medicine, or had their pain ignored. If that has happened to you, being careful or unsure is a fair response to a system that has let you down.</div>
+    <div class="baff" data-en="This tool does not tell you what to do. It gives you information, helps you figure out what matters most to <em>you</em>, and lets you decide on your own terms." data-es="Esta herramienta no te dice qu&#233; hacer. Te da informaci&#243;n, te ayuda a entender qu&#233; te importa m&#225;s a <em>ti</em>, y te deja decidir en tus propios t&#233;rminos.">This tool does not tell you what to do. It gives you information, helps you figure out what matters most to <em>you</em>, and lets you decide on your own terms.</div>
+    <div class="fc"><div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813a3.75 3.75 0 0 0 2.576-2.576L8.279 5.044A.75.75 0 0 1 9 4.5zm9-3a.75.75 0 0 1 .728.568l.258 1.036a2.63 2.63 0 0 0 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258a2.63 2.63 0 0 0-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.63 2.63 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.63 2.63 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5zM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15z" clip-rule="evenodd"/></svg></span><span data-en="You are the expert on your own body" data-es="T&#250; eres la experta de tu propio cuerpo">You are the expert on your own body</span></div><div class="fcb" data-en="No one knows what you have been through or what you need better than you do. Health autonomy means having the knowledge and the confidence to choose what feels right for you. That might be seeing a provider, trying something on your own, or finally understanding what is happening.<div class=&quot;fch&quot;>You deserve care, and you get to decide what that looks like.</div>" data-es="Nadie sabe por lo que has pasado ni lo que necesitas mejor que t&#250;. La autonom&#237;a en tu salud significa tener el conocimiento y la confianza para elegir lo que se siente bien para ti. Eso puede ser ver a un proveedor, probar algo por tu cuenta, o por fin entender lo que est&#225; pasando.<div class=&quot;fch&quot;>Mereces atenci&#243;n, y t&#250; decides c&#243;mo se ve eso.</div>">No one knows what you have been through or what you need better than you do. Health autonomy means having the knowledge and the confidence to choose what feels right for you. That might be seeing a provider, trying something on your own, or finally understanding what is happening.<div class="fch">You deserve care, and you get to decide what that looks like.</div></div></div>
+    <div class="sp"></div>
+  </div>
+</div>
+<div class="bbar"><button class="bbtn break-btn" id="bb2" onclick="doBreak('bb2')" data-en="&#9646;&#9646; Take a break (progress saved)" data-es="&#9646;&#9646; Toma un descanso (tu progreso queda guardado)">&#9646;&#9646; Take a break (progress saved)</button><button class="bbtn reset" onclick="startOver()" data-en="Start over" data-es="Empezar de nuevo">Start over</button></div>
+<div class="sf">
+  <div class="snbtns">
+    <button class="snback" id="m1bk" onclick="m1nav(-1)" style="visibility:hidden">&#8592;</button>
+    <button class="btn" id="m1nx" onclick="m1nav(1)" data-en="Next &#8594;" data-es="Siguiente &#8594;">Next &#8594;</button>
+  </div>
+  <div id="m1nxhint" class="gate-hint" data-en="Tap a symptom above to continue. If none apply, tap one that comes closest." data-es="Toca un s&#237;ntoma de arriba para continuar. Si ninguno aplica, toca el que m&#225;s se acerque.">Tap a symptom above to continue. If none apply, tap one that comes closest.</div>
+</div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S2 MODULE 2 -->
+<div class="screen" id="s2">
+<div class="sb">
+  <div class="tag tm2"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v1.5h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2.6l1.85 5.55a.75.75 0 0 1-.05.65 3.75 3.75 0 0 1-6.5 0 .75.75 0 0 1-.05-.65L14.65 6.5h-1.9v11.25h4.75a.75.75 0 0 1 0 1.5H6.5a.75.75 0 0 1 0-1.5h4.75V6.5h-1.9l1.85 5.55a.75.75 0 0 1-.05.65 3.75 3.75 0 0 1-6.5 0 .75.75 0 0 1-.05-.65L6.45 6.5H3.85a.75.75 0 0 1-.75-.75v-.5a.75.75 0 0 1 .75-.75h7.5V3a.75.75 0 0 1 .75-.75z" clip-rule="evenodd"/></svg><span data-en="Module 2: your options" data-es="M&#243;dulo 2: tus opciones">Module 2: your options</span></div>
+  <div class="title" data-en="What are your options?" data-es="&#191;Cu&#225;les son tus opciones?">What are your options?</div>
+  <div class="bt" data-en="There is no single right answer. <strong>Tap each option to open it.</strong> Each one explains what it is, what it helps with, what to think about, and how to get it in Chicago." data-es="No hay una sola respuesta correcta. <strong>Toca cada opci&#243;n para abrirla.</strong> Cada una explica qu&#233; es, en qu&#233; ayuda, qu&#233; pensar y c&#243;mo conseguirla en Chicago.">There is no single right answer. <strong>Tap each option to open it.</strong> Each one explains what it is, what it helps with, what to think about, and how to get it in Chicago.</div>
+  <div class="bslate" data-en="<strong>A reminder:</strong> These options are general information, not medical advice. Whether any of them is right for you depends on your own health history. A provider can help you decide what fits your body and your situation." data-es="<strong>Un recordatorio:</strong> Estas opciones son informaci&#243;n general, no consejo m&#233;dico. Si alguna te conviene depende de tu propio historial de salud. Un proveedor te puede ayudar a decidir qu&#233; se ajusta a tu cuerpo y a tu situaci&#243;n."><strong>A reminder:</strong> These options are general information, not medical advice. Whether any of them is right for you depends on your own health history. A provider can help you decide what fits your body and your situation.</div>
+  <div class="option-matrix">
+    <div class="option-matrix-intro" data-en="A quick look at which option tends to help which symptom." data-es="Un vistazo r&#225;pido a qu&#233; opci&#243;n suele ayudar con cada s&#237;ntoma.">A quick look at which option tends to help which symptom.</div>
+    <svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="matrix-title">
+      <title id="matrix-title">A grid showing which option category helps which symptom cluster</title>
+      <!-- Column dividers / row separators -->
+      <line x1="140" y1="40" x2="140" y2="210" stroke="#D8D3CA" stroke-width="1"/>
+      <line x1="195" y1="40" x2="195" y2="210" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="250" y1="40" x2="250" y2="210" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="305" y1="40" x2="305" y2="210" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="0" y1="40" x2="360" y2="40" stroke="#D8D3CA" stroke-width="1"/>
+      <line x1="0" y1="74" x2="360" y2="74" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="0" y1="108" x2="360" y2="108" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="0" y1="142" x2="360" y2="142" stroke="#E4E0D8" stroke-width="0.5"/>
+      <line x1="0" y1="176" x2="360" y2="176" stroke="#E4E0D8" stroke-width="0.5"/>
+
+      <!-- Column headers -->
+      <text x="167" y="20" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="Hormone" data-es="Terapia">Hormone</text>
+      <text x="167" y="32" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="therapy" data-es="hormonal">therapy</text>
+      <text x="222" y="20" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="Non-" data-es="Sin">Non-</text>
+      <text x="222" y="32" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="hormone" data-es="hormonas">hormone</text>
+      <text x="277" y="20" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="Lifestyle" data-es="H&#225;bitos">Lifestyle</text>
+      <text x="332" y="20" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="Other" data-es="Otras">Other</text>
+      <text x="332" y="32" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#2A2825" data-en="approaches" data-es="opciones">approaches</text>
+
+      <!-- Row labels (right-aligned at x=132) -->
+      <text x="132" y="60" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" fill="#2A2825" data-en="Hot flashes, sweats" data-es="Sofocos, sudores">Hot flashes, sweats</text>
+      <text x="132" y="94" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" fill="#2A2825" data-en="Sleep &amp; energy" data-es="Sue&#241;o y energ&#237;a">Sleep &amp; energy</text>
+      <text x="132" y="128" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" fill="#2A2825" data-en="Mood changes" data-es="Cambios de &#225;nimo">Mood changes</text>
+      <text x="132" y="162" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" fill="#2A2825" data-en="Vaginal, bladder" data-es="Vaginal, vejiga">Vaginal, bladder</text>
+      <text x="132" y="196" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" fill="#2A2825" data-en="Bone protection" data-es="Protecci&#243;n de huesos">Bone protection</text>
+
+      <!-- Cell markers: ● = strong choice (r=6, sage); · = may help (r=3, sm-sage) -->
+      <!-- Row 1: Hot flashes (y=60) -->
+      <circle cx="167" cy="60" r="6" fill="#3D7A5C"/>
+      <circle cx="222" cy="60" r="6" fill="#3D7A5C"/>
+      <circle cx="277" cy="60" r="3" fill="#A8CDB8"/>
+      <circle cx="332" cy="60" r="3" fill="#A8CDB8"/>
+      <!-- Row 2: Sleep & energy (y=94) -->
+      <circle cx="167" cy="94" r="6" fill="#3D7A5C"/>
+      <circle cx="222" cy="94" r="6" fill="#3D7A5C"/>
+      <circle cx="277" cy="94" r="6" fill="#3D7A5C"/>
+      <circle cx="332" cy="94" r="6" fill="#3D7A5C"/>
+      <!-- Row 3: Mood (y=128) -->
+      <circle cx="167" cy="128" r="3" fill="#A8CDB8"/>
+      <circle cx="222" cy="128" r="6" fill="#3D7A5C"/>
+      <circle cx="277" cy="128" r="3" fill="#A8CDB8"/>
+      <circle cx="332" cy="128" r="6" fill="#3D7A5C"/>
+      <!-- Row 4: Vaginal, bladder (y=162) -->
+      <circle cx="167" cy="162" r="6" fill="#3D7A5C"/>
+      <!-- Row 5: Bone protection (y=196) -->
+      <circle cx="167" cy="196" r="6" fill="#3D7A5C"/>
+      <circle cx="277" cy="196" r="3" fill="#A8CDB8"/>
+    </svg>
+    <div class="option-matrix-legend">
+      <span class="lm-key"><span class="lm-dot lm-big"></span><span data-en="Strong choice" data-es="Buena opci&#243;n">Strong choice</span></span>
+      <span class="lm-key"><span class="lm-dot lm-small"></span><span data-en="May help" data-es="Puede ayudar">May help</span></span>
+    </div>
+  </div>
+  <div class="olist">
+
+    <div class="ocard" id="oc0">
+      <div class="ohdr" onclick="togOpt(0)"><span class="oico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75zM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0zM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59zM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75zM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591zM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18zM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59zM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12zM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591z"/></svg></span><div class="otw"><div class="oname" data-en="Hormone therapy (HT)" data-es="Terapia hormonal (TH)">Hormone therapy (HT)</div><div class="otag" data-en="Works best for hot flashes and sleep" data-es="Funciona mejor para los sofocos y el sue&#241;o">Works best for hot flashes and sleep</div></div><span class="ochev">&#8250;</span></div>
+      <div class="odrw"><div class="odiv"></div>
+        <div class="osec"><div class="oslbl lh" data-en="What it is" data-es="Qu&#233; es">What it is</div><div class="osb" data-en="Hormone therapy replaces some of the estrogen (and sometimes progesterone) your body now makes less of. It comes as pills, patches, creams, rings, or gels. Low-dose versions exist if you are worried about side effects." data-es="La terapia hormonal reemplaza parte del estr&#243;geno (y a veces la progesterona) que tu cuerpo ahora produce menos. Viene en pastillas, parches, cremas, anillos o geles. Existen versiones de dosis baja si te preocupan los efectos secundarios.">Hormone therapy replaces some of the estrogen (and sometimes progesterone) your body now makes less of. It comes as pills, patches, creams, rings, or gels. Low-dose versions exist if you are worried about side effects.</div></div>
+        <div class="osec"><div class="oslbl lh" data-en="What it helps with" data-es="En qu&#233; ayuda">What it helps with</div><div class="osb" data-en="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Hot flashes and night sweats: works better than any other choice</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Sleep problems and feeling tired</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Mood changes tied to hot flashes and poor sleep</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Vaginal dryness and bladder problems</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Helps protect bones over time when started early in menopause</span></div>" data-es="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Sofocos y sudores nocturnos: funciona mejor que cualquier otra opci&#243;n</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Problemas para dormir y sentirte cansada</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Cambios de &#225;nimo ligados a los sofocos y al mal dormir</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Sequedad vaginal y problemas de vejiga</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Ayuda a proteger los huesos con el tiempo cuando se empieza temprano en la menopausia</span></div>"><div class="ck"><div class="ckd"></div><span>Hot flashes and night sweats: works better than any other choice</span></div><div class="ck"><div class="ckd"></div><span>Sleep problems and feeling tired</span></div><div class="ck"><div class="ckd"></div><span>Mood changes tied to hot flashes and poor sleep</span></div><div class="ck"><div class="ckd"></div><span>Vaginal dryness and bladder problems</span></div><div class="ck"><div class="ckd"></div><span>Helps protect bones over time when started early in menopause</span></div></div></div>
+        <div class="osec"><div class="oslbl lc" data-en="Things to think about" data-es="Cosas para pensar">Things to think about</div><div class="osb" data-en="HT is not right for everyone. Women with some cancers, blood clots in the past, or high blood pressure that is hard to control may be told not to use it. Guidelines say HT is for relieving symptoms and protecting bones, not for preventing heart disease. A provider can help you sort out what fits you." data-es="La TH no es para todas. A las mujeres con ciertos c&#225;nceres, co&#225;gulos de sangre en el pasado, o presi&#243;n alta dif&#237;cil de controlar les pueden decir que no la usen. Las gu&#237;as dicen que la TH sirve para aliviar s&#237;ntomas y proteger los huesos, no para prevenir enfermedades del coraz&#243;n. Un proveedor te puede ayudar a saber qu&#233; te conviene.">HT is not right for everyone. Women with some cancers, blood clots in the past, or high blood pressure that is hard to control may be told not to use it. Guidelines say HT is for relieving symptoms and protecting bones, not for preventing heart disease. A provider can help you sort out what fits you.</div></div>
+        <div class="osec"><div class="oslbl la" data-en="How to get this in Chicago" data-es="C&#243;mo conseguir esto en Chicago">How to get this in Chicago</div><div class="osb"><div class="oaccess" data-en="HT is offered at clinics that take Medicaid or charge by what you can pay. <a href=&quot;https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html&quot; target=&quot;_blank&quot;>Find a City of Chicago Health Center &#8250;</a> to start. These centers offer free language help on the spot. You can also see a menopause provider by phone through <a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health</a> (takes Medicaid, no in-person visit needed)." data-es="La TH se ofrece en cl&#237;nicas que toman Medicaid o cobran seg&#250;n lo que puedas pagar. <a href=&quot;https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html&quot; target=&quot;_blank&quot;>Busca un Centro de Salud de la Ciudad de Chicago &#8250;</a> para empezar. Estos centros ofrecen ayuda con el idioma gratis ah&#237; mismo. Tambi&#233;n puedes ver a un proveedor de menopausia por tel&#233;fono con <a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health</a> (toma Medicaid, no se necesita visita en persona).">HT is offered at clinics that take Medicaid or charge by what you can pay. <a href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank">Find a City of Chicago Health Center &#8250;</a> to start. These centers offer free language help on the spot. You can also see a menopause provider by phone through <a href="https://joinmidi.com" target="_blank">Midi Health</a> (takes Medicaid, no in-person visit needed).</div></div></div>
+        <div class="osec"><div class="oslbl lq" data-en="A question you could ask your health care provider" data-es="Una pregunta que podr&#237;as hacerle a tu proveedor(a) de salud">A question you could ask your health care provider</div><div class="osb" data-en="<em>&#8220;Given my health history, could hormone therapy work for me? What are the risks for someone like me?&#8221;</em>" data-es="<em>&#8220;Con mi historial de salud, &#191;podr&#237;a servirme la terapia hormonal? &#191;Cu&#225;les son los riesgos para alguien como yo?&#8221;</em>"><em>&#8220;Given my health history, could hormone therapy work for me? What are the risks for someone like me?&#8221;</em></div></div>
+      </div>
+    </div>
+
+    <div class="ocard" id="oc1">
+      <div class="ohdr" onclick="togOpt(1)"><span class="oico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M3.515 13.778c-1.953-1.953-1.953-5.119 0-7.071l3.193-3.193c1.952-1.953 5.118-1.953 7.07 0l6.717 6.717c1.952 1.952 1.952 5.118 0 7.071l-3.194 3.194c-1.952 1.952-5.118 1.952-7.07 0l-6.717-6.717zm10.41-9.85a3.5 3.5 0 0 0-4.949 0L5.783 7.121l8.485 8.485 3.193-3.194a3.5 3.5 0 0 0 0-4.95L13.926 3.93z" clip-rule="evenodd"/></svg></span><div class="otw"><div class="oname" data-en="Non-hormone medicines" data-es="Medicinas sin hormonas">Non-hormone medicines</div><div class="otag" data-en="Prescription options without hormones" data-es="Opciones con receta sin hormonas">Prescription options without hormones</div></div><span class="ochev">&#8250;</span></div>
+      <div class="odrw"><div class="odiv"></div>
+        <div class="osec"><div class="oslbl lh" data-en="What it is" data-es="Qu&#233; es">What it is</div><div class="osb" data-en="Some medicines made for other health needs also help with menopause symptoms. These include low-dose mood medicines, a blood pressure medicine called clonidine, and a newer medicine (Veozah) made just for hot flashes." data-es="Algunas medicinas hechas para otras necesidades de salud tambi&#233;n ayudan con los s&#237;ntomas de la menopausia. Estas incluyen medicinas para el &#225;nimo en dosis bajas, una medicina para la presi&#243;n llamada clonidina, y una medicina m&#225;s nueva (Veozah) hecha solo para los sofocos.">Some medicines made for other health needs also help with menopause symptoms. These include low-dose mood medicines, a blood pressure medicine called clonidine, and a newer medicine (Veozah) made just for hot flashes.</div></div>
+        <div class="osec"><div class="oslbl lh" data-en="What it helps with" data-es="En qu&#233; ayuda">What it helps with</div><div class="osb" data-en="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Hot flashes and night sweats: can cut how often they happen</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Mood changes, worry, and low feelings</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Trouble sleeping</span></div>" data-es="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Sofocos y sudores nocturnos: pueden bajar qu&#233; tan seguido pasan</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Cambios de &#225;nimo, preocupaci&#243;n y sentirte triste</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span>Problemas para dormir</span></div>"><div class="ck"><div class="ckd"></div><span>Hot flashes and night sweats: can cut how often they happen</span></div><div class="ck"><div class="ckd"></div><span>Mood changes, worry, and low feelings</span></div><div class="ck"><div class="ckd"></div><span>Trouble sleeping</span></div></div></div>
+        <div class="osec"><div class="oslbl lc" data-en="Things to think about" data-es="Cosas para pensar">Things to think about</div><div class="osb" data-en="These need a prescription. Some take a few weeks to reach their full effect. If you already take medicine for mood or blood pressure, a provider needs to check that these are safe to take together." data-es="Necesitan receta. Algunas tardan unas semanas en alcanzar todo su efecto. Si ya tomas medicina para el &#225;nimo o la presi&#243;n, un proveedor tiene que revisar que se puedan tomar juntas con seguridad.">These need a prescription. Some take a few weeks to reach their full effect. If you already take medicine for mood or blood pressure, a provider needs to check that these are safe to take together.</div></div>
+        <div class="osec"><div class="oslbl la" data-en="How to get this in Chicago" data-es="C&#243;mo conseguir esto en Chicago">How to get this in Chicago</div><div class="osb"><div class="oaccess" data-en="Any health care provider can prescribe these. <a href=&quot;https://www.illinoisfreeclinics.org/clinic-search/clinic-directory/&quot; target=&quot;_blank&quot;>CommunityHealth Chicago</a> offers free regular care for women without insurance. <a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health</a> can also prescribe non-hormone options by phone." data-es="Cualquier proveedor de salud puede recetarlas. <a href=&quot;https://www.illinoisfreeclinics.org/clinic-search/clinic-directory/&quot; target=&quot;_blank&quot;>CommunityHealth Chicago</a> ofrece atenci&#243;n regular gratis para mujeres sin seguro. <a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health</a> tambi&#233;n puede recetar opciones sin hormonas por tel&#233;fono.">Any health care provider can prescribe these. <a href="https://www.illinoisfreeclinics.org/clinic-search/clinic-directory/" target="_blank">CommunityHealth Chicago</a> offers free regular care for women without insurance. <a href="https://joinmidi.com" target="_blank">Midi Health</a> can also prescribe non-hormone options by phone.</div></div></div>
+        <div class="osec"><div class="oslbl lq" data-en="A question you could ask your health care provider" data-es="Una pregunta que podr&#237;as hacerle a tu proveedor(a) de salud">A question you could ask your health care provider</div><div class="osb" data-en="<em>&#8220;Are there non-hormone medicine options that could lower my hot flashes without affecting the medicines I already take?&#8221;</em>" data-es="<em>&#8220;&#191;Hay opciones de medicinas sin hormonas que puedan bajar mis sofocos sin afectar las medicinas que ya tomo?&#8221;</em>"><em>&#8220;Are there non-hormone medicine options that could lower my hot flashes without affecting the medicines I already take?&#8221;</em></div></div>
+      </div>
+    </div>
+
+    <div class="ocard" id="oc2">
+      <div class="ohdr" onclick="togOpt(2)"><span class="oico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg></span><div class="otw"><div class="oname" data-en="Lifestyle changes" data-es="Cambios en tus h&#225;bitos">Lifestyle changes</div><div class="otag" data-en="Things you can start on your own today" data-es="Cosas que puedes empezar por tu cuenta hoy">Things you can start on your own today</div></div><span class="ochev">&#8250;</span></div>
+      <div class="odrw"><div class="odiv"></div>
+        <div class="osec"><div class="oslbl lh" data-en="What it is" data-es="Qu&#233; es">What it is</div><div class="osb" data-en="Small changes to your daily life that studies show can make symptoms feel better. No prescription, no visit, no cost. These work best along with other options when symptoms are strong." data-es="Cambios peque&#241;os en tu vida diaria que los estudios muestran que pueden hacer que los s&#237;ntomas se sientan mejor. Sin receta, sin visita, sin costo. Funcionan mejor junto con otras opciones cuando los s&#237;ntomas son fuertes.">Small changes to your daily life that studies show can make symptoms feel better. No prescription, no visit, no cost. These work best along with other options when symptoms are strong.</div></div>
+        <div class="osec"><div class="oslbl lh" data-en="What helps and why" data-es="Qu&#233; ayuda y por qu&#233;">What helps and why</div><div class="osb" data-en="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Keep your bedroom cool.</strong> Use a fan, light blankets, or a cool shower before bed. A cooler body means fewer hot flashes.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Move your body.</strong> Regular movement supports sleep, mood, bones, and heart during menopause. Studies have not shown that walking alone reliably lowers hot flashes, but strength training may help.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Slow breathing during a hot flash.</strong> Some women find it helps them feel calmer in the moment. Large studies have not shown that it shortens the flash itself, but it can make the moment feel less scary.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Cut back on alcohol and caffeine.</strong> Both can set off hot flashes.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Go to bed and wake up at the same time each day.</strong> This helps your body&#8217;s sleep clock and makes sleep better over time.</span></div>" data-es="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Mant&#233;n tu cuarto fresco.</strong> Usa un ventilador, cobijas ligeras o un ba&#241;o fresco antes de dormir. Un cuerpo m&#225;s fresco significa menos sofocos.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Mueve tu cuerpo.</strong> El movimiento regular apoya el sue&#241;o, el &#225;nimo, los huesos y el coraz&#243;n durante la menopausia. Los estudios no han mostrado que caminar sola baje los sofocos, pero el entrenamiento de fuerza puede ayudar.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Respiraci&#243;n lenta durante un sofoco.</strong> Algunas mujeres encuentran que las ayuda a sentirse m&#225;s calmadas en el momento. Los estudios grandes no han mostrado que acorte el sofoco, pero puede hacer el momento menos asustador.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Toma menos alcohol y cafe&#237;na.</strong> Ambos pueden provocar sofocos.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Acu&#233;state y lev&#225;ntate a la misma hora cada d&#237;a.</strong> Esto ayuda al reloj de sue&#241;o de tu cuerpo y hace que duermas mejor con el tiempo.</span></div>"><div class="ck"><div class="ckd"></div><span><strong>Keep your bedroom cool.</strong> Use a fan, light blankets, or a cool shower before bed. A cooler body means fewer hot flashes.</span></div><div class="ck"><div class="ckd"></div><span><strong>Move your body.</strong> Regular movement supports sleep, mood, bones, and heart during menopause. Studies have not shown that walking alone reliably lowers hot flashes, but strength training may help.</span></div><div class="ck"><div class="ckd"></div><span><strong>Slow breathing during a hot flash.</strong> Some women find it helps them feel calmer in the moment. Large studies have not shown that it shortens the flash itself, but it can make the moment feel less scary.</span></div><div class="ck"><div class="ckd"></div><span><strong>Cut back on alcohol and caffeine.</strong> Both can set off hot flashes.</span></div><div class="ck"><div class="ckd"></div><span><strong>Go to bed and wake up at the same time each day.</strong> This helps your body&#8217;s sleep clock and makes sleep better over time.</span></div></div></div>
+        <div class="osec"><div class="oslbl lc" data-en="Things to think about" data-es="Cosas para pensar">Things to think about</div><div class="osb" data-en="These take time, and you have to do them often. They help more with mild symptoms than very strong ones. They work best as part of a bigger plan." data-es="Toman tiempo y hay que hacerlas seguido. Ayudan m&#225;s con s&#237;ntomas leves que con muy fuertes. Funcionan mejor como parte de un plan m&#225;s grande.">These take time, and you have to do them often. They help more with mild symptoms than very strong ones. They work best as part of a bigger plan.</div></div>
+        <div class="osec"><div class="oslbl lq" data-en="A question you could ask your health care provider" data-es="Una pregunta que podr&#237;as hacerle a tu proveedor(a) de salud">A question you could ask your health care provider</div><div class="osb" data-en="<em>&#8220;Which lifestyle changes would help most for my specific symptoms?&#8221;</em>" data-es="<em>&#8220;&#191;Qu&#233; cambios en mi vida diaria ayudar&#237;an m&#225;s con mis s&#237;ntomas espec&#237;ficos?&#8221;</em>"><em>&#8220;Which lifestyle changes would help most for my specific symptoms?&#8221;</em></div></div>
+      </div>
+    </div>
+
+    <div class="ocard" id="oc3">
+      <div class="ohdr" onclick="togOpt(3)"><span class="oico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813a3.75 3.75 0 0 0 2.576-2.576L8.279 5.044A.75.75 0 0 1 9 4.5zm9-3a.75.75 0 0 1 .728.568l.258 1.036a2.63 2.63 0 0 0 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258a2.63 2.63 0 0 0-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.63 2.63 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.63 2.63 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5zM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15z" clip-rule="evenodd"/></svg></span><div class="otw"><div class="oname" data-en="Other approaches" data-es="Otras opciones">Other approaches</div><div class="otag" data-en="Herbs, acupuncture, and mind-body practices" data-es="Hierbas, acupuntura y pr&#225;cticas de cuerpo y mente">Herbs, acupuncture, and mind-body practices</div></div><span class="ochev">&#8250;</span></div>
+      <div class="odrw"><div class="odiv"></div>
+        <div class="osec"><div class="oslbl lh" data-en="Options with research behind them" data-es="Opciones con investigaci&#243;n que las respalda">Options with research behind them</div><div class="osb" data-en="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Talk therapy (CBT).</strong> Strong evidence shows it helps with sleep, mood, and how much hot flashes bother you during menopause.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Mindfulness and stress relief.</strong> These help make symptoms feel less upsetting, even if the symptoms keep happening just as often.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Acupuncture.</strong> Some studies suggest a small benefit, but the findings are mixed.</span></div>" data-es="<div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Terapia de conversaci&#243;n (TCC).</strong> Hay pruebas fuertes de que ayuda con el sue&#241;o, el &#225;nimo, y qu&#233; tanto te molestan los sofocos durante la menopausia.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Mindfulness y manejo del estr&#233;s.</strong> Ayudan a que los s&#237;ntomas se sientan menos molestos, aunque sigan pasando con la misma frecuencia.</span></div><div class=&quot;ck&quot;><div class=&quot;ckd&quot;></div><span><strong>Acupuntura.</strong> Algunos estudios sugieren un beneficio peque&#241;o, pero los resultados son mezclados.</span></div>"><div class="ck"><div class="ckd"></div><span><strong>Talk therapy (CBT).</strong> Strong evidence shows it helps with sleep, mood, and how much hot flashes bother you during menopause.</span></div><div class="ck"><div class="ckd"></div><span><strong>Mindfulness and stress relief.</strong> These help make symptoms feel less upsetting, even if the symptoms keep happening just as often.</span></div><div class="ck"><div class="ckd"></div><span><strong>Acupuncture.</strong> Some studies suggest a small benefit, but the findings are mixed.</span></div></div></div>
+        <div class="osec"><div class="oslbl lc" data-en="Things to think about" data-es="Cosas para pensar">Things to think about</div><div class="osb" data-en="Herbs and pills you buy at the store are not checked as closely as prescription medicines. They can also clash with other medicines you take. Always tell any provider you see about any herbs or pills you use. The resources at the end of this tool can help you find low-cost mental health and other providers." data-es="Las hierbas y pastillas que compras en la tienda no se revisan tan de cerca como las medicinas con receta. Tambi&#233;n pueden chocar con otras medicinas que tomes. Siempre dile a cualquier proveedor que veas sobre las hierbas o pastillas que usas. Los recursos al final de esta herramienta pueden ayudarte a encontrar proveedores de salud mental y otros de bajo costo.">Herbs and pills you buy at the store are not checked as closely as prescription medicines. They can also clash with other medicines you take. Always tell any provider you see about any herbs or pills you use. The resources at the end of this tool can help you find low-cost mental health and other providers.</div></div>
+        <div class="osec"><div class="oslbl la" data-en="How to get this in Chicago" data-es="C&#243;mo conseguir esto en Chicago">How to get this in Chicago</div><div class="osb"><div class="oaccess" data-en="Check the resources at the end of this tool for free and low-cost mental health and other care near you. The <a href=&quot;https://chicago.medicine.uic.edu/chicago-research/centers/charm/&quot; target=&quot;_blank&quot;>CHARM Center at UIC</a> may have help too." data-es="Mira los recursos al final de esta herramienta para encontrar atenci&#243;n de salud mental y otros cuidados gratis o de bajo costo cerca de ti. El <a href=&quot;https://chicago.medicine.uic.edu/chicago-research/centers/charm/&quot; target=&quot;_blank&quot;>Centro CHARM en UIC</a> tambi&#233;n puede tener ayuda.">Check the resources at the end of this tool for free and low-cost mental health and other care near you. The <a href="https://chicago.medicine.uic.edu/chicago-research/centers/charm/" target="_blank">CHARM Center at UIC</a> may have help too.</div></div></div>
+        <div class="osec"><div class="oslbl lq" data-en="A question you could ask your health care provider" data-es="Una pregunta que podr&#237;as hacerle a tu proveedor(a) de salud">A question you could ask your health care provider</div><div class="osb" data-en="<em>&#8220;Are these other options safe with the medicines I already take?&#8221;</em>" data-es="<em>&#8220;&#191;Estas otras opciones son seguras con las medicinas que ya tomo?&#8221;</em>"><em>&#8220;Are these other options safe with the medicines I already take?&#8221;</em></div></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="sp"></div>
+</div>
+<div class="bbar"><button class="bbtn" id="bb3" onclick="doBreak('bb3')" data-en="&#9646;&#9646; Take a break (progress saved)" data-es="&#9646;&#9646; Toma un descanso (tu progreso queda guardado)">&#9646;&#9646; Take a break (progress saved)</button><button class="bbtn reset" onclick="startOver()" data-en="Start over" data-es="Empezar de nuevo">Start over</button></div>
+<div class="sf"><button class="btn ter" onclick="goTo(3)" data-en="Next: what matters to you &#8594;" data-es="Siguiente: qu&#233; te importa &#8594;">Next: what matters to you &#8594;</button></div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S3 MODULE 3 -->
+<div class="screen" id="s3">
+<div class="sb">
+  <div class="tag tm3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001z"/></svg><span data-en="Module 3: what matters to you" data-es="M&#243;dulo 3: qu&#233; te importa">Module 3: what matters to you</span></div>
+  <div class="title" data-en="What matters most to you?" data-es="&#191;Qu&#233; te importa m&#225;s?">What matters most to you?</div>
+  <div class="bt" data-en="There are no right or wrong answers. Your honest answers will shape your own summary and help you make a choice that feels true to you." data-es="No hay respuestas correctas o incorrectas. Tus respuestas honestas dan forma a tu resumen y te ayudan a tomar una decisi&#243;n que se sienta verdadera para ti.">There are no right or wrong answers. Your honest answers will shape your own summary and help you make a choice that feels true to you.</div>
+  <div class="vlist">
+    <div class="vrow" id="vr0"><div class="vstmt" data-en="&#8220;It matters to me to <strong>avoid taking medicine</strong> if I can.&#8221;" data-es="&#8220;Me importa <strong>evitar tomar medicinas</strong> si puedo.&#8221;">&#8220;It matters to me to <strong>avoid taking medicine</strong> if I can.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,0,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,0,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,0,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+    <div class="vrow" id="vr1"><div class="vstmt" data-en="&#8220;It matters to me to <strong>sleep better and feel less tired</strong>.&#8221;" data-es="&#8220;Me importa <strong>dormir mejor y sentirme menos cansada</strong>.&#8221;">&#8220;It matters to me to <strong>sleep better and feel less tired</strong>.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,1,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,1,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,1,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+    <div class="vrow" id="vr2"><div class="vstmt" data-en="&#8220;It matters to me to have options that <strong>do not need a doctor visit</strong>.&#8221;" data-es="&#8220;Me importa tener opciones que <strong>no necesiten una visita al doctor</strong>.&#8221;">&#8220;It matters to me to have options that <strong>do not need a doctor visit</strong>.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,2,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,2,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,2,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+    <div class="vrow" id="vr3"><div class="vstmt" data-en="&#8220;It matters to me to <strong>protect my bones and heart</strong> long-term.&#8221;" data-es="&#8220;Me importa <strong>proteger mis huesos y coraz&#243;n</strong> a largo plazo.&#8221;">&#8220;It matters to me to <strong>protect my bones and heart</strong> long-term.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,3,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,3,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,3,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+    <div class="vrow" id="vr4"><div class="vstmt" data-en="&#8220;It matters to me to <strong>feel in control of my own health</strong>.&#8221;" data-es="&#8220;Me importa <strong>sentirme a cargo de mi propia salud</strong>.&#8221;">&#8220;It matters to me to <strong>feel in control of my own health</strong>.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,4,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,4,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,4,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+    <div class="vrow" id="vr5"><div class="vstmt" data-en="&#8220;It matters to me to <strong>feel better quickly</strong>, even if it means trying something new.&#8221;" data-es="&#8220;Me importa <strong>sentirme mejor r&#225;pido</strong>, aunque signifique probar algo nuevo.&#8221;">&#8220;It matters to me to <strong>feel better quickly</strong>, even if it means trying something new.&#8221;</div><div class="vbtns"><div class="vb" onclick="selV(this,5,'A lot')" data-en="A lot" data-es="Mucho">A lot</div><div class="vb" onclick="selV(this,5,'Somewhat')" data-en="Somewhat" data-es="Algo">Somewhat</div><div class="vb" onclick="selV(this,5,'Not really')" data-en="Not really" data-es="No mucho">Not really</div></div></div>
+  </div>
+  <div class="sh" data-en="What we are hearing from you" data-es="Lo que estamos escuchando de ti">What we are hearing from you</div>
+  <div class="vrefl" id="vrefl" data-en="Your reflection will appear here as you answer the questions above." data-es="Tu reflexi&#243;n aparecer&#225; aqu&#237; cuando contestes las preguntas de arriba.">Your reflection will appear here as you answer the questions above.</div>
+  <div class="sp"></div>
+</div>
+<div class="bbar"><button class="bbtn" id="bb4" onclick="doBreak('bb4')" data-en="&#9646;&#9646; Take a break (progress saved)" data-es="&#9646;&#9646; Toma un descanso (tu progreso queda guardado)">&#9646;&#9646; Take a break (progress saved)</button><button class="bbtn reset" onclick="startOver()" data-en="Start over" data-es="Empezar de nuevo">Start over</button></div>
+<div class="sf"><button id="m3nx" class="btn plm locked" onclick="tryGoto(4)" data-en="Next: choose your next step &#8594;" data-es="Siguiente: elige tu pr&#243;ximo paso &#8594;">Next: choose your next step &#8594;</button><div id="m3nxhint" class="gate-hint show" data-en="Answer at least one question above to continue." data-es="Contesta al menos una pregunta de arriba para continuar.">Answer at least one question above to continue.</div></div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S4 MODULE 4 -->
+<div class="screen" id="s4">
+<div class="sb">
+  <div class="tag tm4"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M3.75 12a.75.75 0 0 1 .75-.75h13.19l-5.47-5.47a.75.75 0 0 1 1.06-1.06l6.75 6.75a.75.75 0 0 1 0 1.06l-6.75 6.75a.75.75 0 1 1-1.06-1.06l5.47-5.47H4.5a.75.75 0 0 1-.75-.75z" clip-rule="evenodd"/></svg><span data-en="Module 4: your next step" data-es="M&#243;dulo 4: tu pr&#243;ximo paso">Module 4: your next step</span></div>
+  <div class="title" data-en="Choose your next step" data-es="Elige tu pr&#243;ximo paso">Choose your next step</div>
+  <div class="bt" data-en="Based on what matters most to you, choose one thing that feels right for right now. <strong>Tap a step to see how to take it.</strong>" data-es="Basado en lo que m&#225;s te importa, elige una cosa que se sienta bien ahora mismo. <strong>Toca un paso para ver c&#243;mo darlo.</strong>">Based on what matters most to you, choose one thing that feels right for right now. <strong>Tap a step to see how to take it.</strong></div>
+  <div class="bslate" id="sug" style="display:none"><strong data-en="Based on what matters to you:" data-es="Basado en lo que te importa:">Based on what matters to you:</strong> <span id="sugtext"></span></div>
+  <div class="alist">
+    <div class="acard" id="ac0" onclick="selA(this,0,'I will find a community health center near me that takes walk-ins or charges by what I can pay.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689z" clip-rule="evenodd"/><path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.43z"/></svg></span><span class="atxt" data-en="I will find a community health center near me that takes walk-ins or charges by what I can pay." data-es="Voy a buscar un centro de salud comunitario cerca de m&#237; que reciba sin cita o cobre seg&#250;n lo que puedo pagar.">I will find a community health center near me that takes walk-ins or charges by what I can pay.</span>
+    </div>
+    <div class="adetail" id="ad0" data-en="Use the <a href=&quot;https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html&quot; target=&quot;_blank&quot;>City of Chicago Health Center Finder &#8250;</a> to find the closest clinic. All centers take Medicaid and have free language help. Many also have walk-in hours, so no appointment is needed to start." data-es="Usa el <a href=&quot;https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html&quot; target=&quot;_blank&quot;>Buscador de Centros de Salud de la Ciudad de Chicago &#8250;</a> para encontrar la cl&#237;nica m&#225;s cercana. Todos los centros toman Medicaid y tienen ayuda con el idioma gratis. Muchos tambi&#233;n tienen horas sin cita, as&#237; que no necesitas cita para empezar.">Use the <a href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank">City of Chicago Health Center Finder &#8250;</a> to find the closest clinic. All centers take Medicaid and have free language help. Many also have walk-in hours, so no appointment is needed to start.</div>
+
+    <div class="acard" id="ac1" onclick="selA(this,1,'I will talk to someone I trust about what I learned today.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223z" clip-rule="evenodd"/></svg></span><span class="atxt" data-en="I will talk to someone I trust about what I learned today." data-es="Voy a hablar con alguien de confianza sobre lo que aprend&#237; hoy.">I will talk to someone I trust about what I learned today.</span>
+    </div>
+    <div class="adetail" id="ad1" data-en="Your summary at the end of this tool is made to share. Take a picture, print it, or read parts to someone. You do not have to explain it all. Even &#8220;I learned that what I am feeling is real, and there are options&#8221; is enough to start a conversation." data-es="Tu resumen al final de esta herramienta est&#225; hecho para compartir. Toma una foto, impr&#237;melo, o l&#233;ele partes a alguien. No tienes que explicarlo todo. Hasta decir &#8220;Aprend&#237; que lo que siento es real y que hay opciones&#8221; es suficiente para empezar una conversaci&#243;n.">Your summary at the end of this tool is made to share. Take a picture, print it, or read parts to someone. You do not have to explain it all. Even &#8220;I learned that what I am feeling is real, and there are options&#8221; is enough to start a conversation.</div>
+
+    <div class="acard" id="ac2" onclick="selA(this,2,'I will try one lifestyle change this week and pay attention to how it feels.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg></span><span class="atxt" data-en="I will try one lifestyle change this week and pay attention to how it feels." data-es="Voy a probar un cambio en mis h&#225;bitos esta semana y poner atenci&#243;n a c&#243;mo se siente.">I will try one lifestyle change this week and pay attention to how it feels.</span>
+    </div>
+    <div class="adetail" id="ad2" data-en="Pick one thing from Module 2 to try this week, not all of them at once. Start with keeping your bedroom cooler at night, or cutting back on a drink (alcohol or caffeine) that sets off your flashes. Small changes you can stick with help most." data-es="Elige una sola cosa del M&#243;dulo 2 para probar esta semana, no todas a la vez. Empieza por mantener tu cuarto m&#225;s fresco por la noche, o tomar menos de una bebida (alcohol o cafe&#237;na) que provoca tus sofocos. Los cambios peque&#241;os que puedes mantener son los que m&#225;s ayudan.">Pick one thing from Module 2 to try this week, not all of them at once. Start with keeping your bedroom cooler at night, or cutting back on a drink (alcohol or caffeine) that sets off your flashes. Small changes you can stick with help most.</div>
+
+    <div class="acard" id="ac3" onclick="selA(this,3,'I will try a telehealth menopause appointment from my phone.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75zM7.5 4.125C7.5 3.504 8.004 3 8.625 3H9.75v.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V3h1.125c.621 0 1.125.504 1.125 1.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125z" clip-rule="evenodd"/></svg></span><span class="atxt" data-en="I will try a telehealth menopause appointment from my phone." data-es="Voy a probar una cita de menopausia por tel&#233;fono.">I will try a telehealth menopause appointment from my phone.</span>
+    </div>
+    <div class="adetail" id="ad3" data-en="<a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health &#8250;</a> is a clinic you can use by phone or computer. They focus on menopause and take Medicaid in Illinois. No in-person visit needed. You can sign up and book a visit in about 5 minutes from this screen. Your first visit is usually under $30 with insurance, or free with Medicaid." data-es="<a href=&quot;https://joinmidi.com&quot; target=&quot;_blank&quot;>Midi Health &#8250;</a> es una cl&#237;nica que puedes usar por tel&#233;fono o computadora. Se enfocan en la menopausia y toman Medicaid en Illinois. No se necesita visita en persona. Puedes registrarte y reservar una visita en como 5 minutos desde esta pantalla. Tu primera visita es normalmente menos de $30 con seguro, o gratis con Medicaid."><a href="https://joinmidi.com" target="_blank">Midi Health &#8250;</a> is a clinic you can use by phone or computer. They focus on menopause and take Medicaid in Illinois. No in-person visit needed. You can sign up and book a visit in about 5 minutes from this screen. Your first visit is usually under $30 with insurance, or free with Medicaid.</div>
+
+    <div class="acard" id="ac4" onclick="selA(this,4,'I will bring this summary to my next provider appointment.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 0 0-.673-.05A3 3 0 0 0 15 1.5h-1.5a3 3 0 0 0-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6zM13.5 3A1.5 1.5 0 0 0 12 4.5h4.5A1.5 1.5 0 0 0 15 3h-1.5z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375zm9.586 4.594a.75.75 0 0 0-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.116-.062l3-3.75z" clip-rule="evenodd"/></svg></span><span class="atxt" data-en="I will bring this summary to my next provider appointment." data-es="Voy a llevar este resumen a mi pr&#243;xima cita con un proveedor.">I will bring this summary to my next provider appointment.</span>
+    </div>
+    <div class="adetail" id="ad4" data-en="At the end of this tool, take a picture or print your summary. Show it to your provider and say: &#8220;I finished a menopause health program. This is what I learned about what matters to me. I would like to talk about my options.&#8221; You do not need to say more. Your summary speaks for you." data-es="Al final de esta herramienta, toma una foto o imprime tu resumen. Mu&#233;straselo a tu proveedor y di: &#8220;Termin&#233; un programa de salud de la menopausia. Esto es lo que aprend&#237; sobre lo que me importa. Me gustar&#237;a hablar de mis opciones.&#8221; No necesitas decir m&#225;s. Tu resumen habla por ti.">At the end of this tool, take a picture or print your summary. Show it to your provider and say: &#8220;I finished a menopause health program. This is what I learned about what matters to me. I would like to talk about my options.&#8221; You do not need to say more. Your summary speaks for you.</div>
+
+    <div class="acard" id="ac5" onclick="selA(this,5,'I will give myself time to think about what I learned before deciding anything.')">
+      <span class="aico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm.75-14a.75.75 0 0 0-1.5 0v4c0 .2.08.39.22.53l3 3a.75.75 0 1 0 1.06-1.06l-2.78-2.78V8z" clip-rule="evenodd"/></svg></span><span class="atxt" data-en="I will give myself time to think about what I learned before deciding anything." data-es="Voy a darme tiempo para pensar en lo que aprend&#237; antes de decidir nada.">I will give myself time to think about what I learned before deciding anything.</span>
+    </div>
+    <div class="adetail" id="ad5" data-en="That is a real choice too. Save this tool on your phone. Take a picture of your summary. Come back when you are ready. The resources at the end will still be here." data-es="Esa tambi&#233;n es una decisi&#243;n real. Guarda esta herramienta en tu tel&#233;fono. Toma una foto de tu resumen. Vuelve cuando est&#233;s lista. Los recursos al final seguir&#225;n aqu&#237;.">That is a real choice too. Save this tool on your phone. Take a picture of your summary. Come back when you are ready. The resources at the end will still be here.</div>
+  </div>
+  <textarea class="wo" id="cact" rows="2" placeholder="Or write your own step here..." data-en-placeholder="Or write your own step here..." data-es-placeholder="O escribe tu propio paso aqu&#237;..." oninput="updateGates();saveState()"></textarea>
+  <div class="sp"></div>
+</div>
+<div class="bbar"><button class="bbtn" id="bb5" onclick="doBreak('bb5')" data-en="&#9646;&#9646; Take a break (progress saved)" data-es="&#9646;&#9646; Toma un descanso (tu progreso queda guardado)">&#9646;&#9646; Take a break (progress saved)</button><button class="bbtn reset" onclick="startOver()" data-en="Start over" data-es="Empezar de nuevo">Start over</button></div>
+<div class="sf"><button id="m4nx" class="btn amb locked" onclick="tryGoto(5,true)" data-en="See your personal summary &#8594;" data-es="Ver tu resumen personal &#8594;">See your personal summary &#8594;</button><div id="m4nxhint" class="gate-hint show" data-en="Pick a step above or write your own to continue." data-es="Elige un paso de arriba o escribe el tuyo para continuar.">Pick a step above or write your own to continue.</div></div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S5 SUMMARY + RESOURCES -->
+<div class="screen" id="s5">
+<div class="sb">
+  <div class="tag ts"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207z" clip-rule="evenodd"/></svg><span data-en="Your personal summary" data-es="Tu resumen personal">Your personal summary</span></div>
+  <div class="title" data-en="You did it." data-es="Lo lograste.">You did it.</div>
+  <div class="bt" data-en="Here is what you told us matters to you and the step you chose. <strong>Take a picture or print this to keep.</strong> Bring it to a visit or share it with someone you trust." data-es="Esto es lo que nos dijiste que te importa y el paso que elegiste. <strong>Toma una foto o imprime esto para guardarlo.</strong> Ll&#233;valo a una visita o comp&#225;rtelo con alguien de confianza.">Here is what you told us matters to you and the step you chose. <strong>Take a picture or print this to keep.</strong> Bring it to a visit or share it with someone you trust.</div>
+  <div class="sumhero">
+    <div class="sbl sbs" data-en="What matters most to you" data-es="Lo que m&#225;s te importa">What matters most to you</div>
+    <div class="sprior" id="sprior" data-en="Your priorities will appear here after completing Module 3." data-es="Tus prioridades aparecer&#225;n aqu&#237; despu&#233;s de completar el M&#243;dulo 3.">Your priorities will appear here after completing Module 3.</div>
+    <div class="sdivs"></div>
+    <div class="sbl sba" data-en="Your next step" data-es="Tu pr&#243;ximo paso">Your next step</div>
+    <div class="satext" id="satext" data-en="Your chosen step will appear here after Module 4." data-es="El paso que elegiste aparecer&#225; aqu&#237; despu&#233;s del M&#243;dulo 4.">Your chosen step will appear here after Module 4.</div>
+    <div class="snext" id="snext" style="display:none">
+      <div class="snext-lbl" data-en="How to take this step" data-es="C&#243;mo dar este paso">How to take this step</div>
+      <div class="snext-body" id="snext-body"></div>
+    </div>
+    <div class="senc" id="senc" data-en="You took a big step today by learning about your health and what matters to you. This summary belongs to you. Keep it." data-es="Tomaste un gran paso hoy al aprender sobre tu salud y lo que te importa. Este resumen es tuyo. Gu&#225;rdalo.">You took a big step today by learning about your health and what matters to you. This summary belongs to you. Keep it.</div>
+  </div>
+  <div class="pbar">
+    <button class="pbtn" onclick="window.print()"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25zM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008z" clip-rule="evenodd"/></svg><span data-en="Print summary" data-es="Imprimir resumen">Print summary</span></button>
+    <button class="pbtn" onclick="sshotTip()"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0z" clip-rule="evenodd"/></svg><span data-en="Screenshot tip" data-es="C&#243;mo tomar foto">Screenshot tip</span></button>
+  </div>
+  <div class="baff" data-en="Your symptoms are real, and you deserve care. This is just the start, and you already know more now than you did an hour ago." data-es="Tus s&#237;ntomas son reales, y mereces atenci&#243;n. Esto es solo el comienzo, y ya sabes m&#225;s ahora de lo que sab&#237;as hace una hora.">Your symptoms are real, and you deserve care. This is just the start, and you already know more now than you did an hour ago.</div>
+  <div class="bslate" data-en="<strong>A reminder:</strong> This tool is for learning only. It does not take the place of a doctor&#8217;s diagnosis or care. The resources below can help you find a provider who can talk with you about your own health." data-es="<strong>Un recordatorio:</strong> Esta herramienta es solo para aprender. No reemplaza el diagn&#243;stico ni la atenci&#243;n de un doctor. Los recursos de abajo pueden ayudarte a encontrar un proveedor que hable contigo sobre tu propia salud."><strong>A reminder:</strong> This tool is for learning only. It does not take the place of a doctor&#8217;s diagnosis or care. The resources below can help you find a provider who can talk with you about your own health.</div>
+  <div class="rsec">
+    <div class="rtitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689z" clip-rule="evenodd"/><path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.43z"/></svg><span data-en="Free &amp; low-cost resources in Chicago and online" data-es="Recursos gratis y de bajo costo en Chicago y en l&#237;nea">Free &amp; low-cost resources in Chicago and online</span></div>
+    <div class="rgl" data-en="Chicago clinical care" data-es="Atenci&#243;n cl&#237;nica en Chicago">Chicago clinical care</div>
+    <a class="ri" href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="City of Chicago Health Center Finder <span class=&quot;rfree&quot;>PAY WHAT YOU CAN</span>" data-es="Buscador de Centros de Salud de la Ciudad de Chicago <span class=&quot;rfree&quot;>PAGA LO QUE PUEDAS</span>">City of Chicago Health Center Finder <span class="rfree">PAY WHAT YOU CAN</span></div><div class="rdesc" data-en="Clinics that take Medicaid, with walk-in hours and free language help. Find one at chicago.gov." data-es="Cl&#237;nicas que toman Medicaid, con horas sin cita y ayuda con el idioma gratis. Busca una en chicago.gov.">Clinics that take Medicaid, with walk-in hours and free language help. Find one at chicago.gov.</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://www.illinoisfreeclinics.org/clinic-search/clinic-directory/" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="CommunityHealth Chicago <span class=&quot;rfree&quot;>FREE</span>" data-es="CommunityHealth Chicago <span class=&quot;rfree&quot;>GRATIS</span>">CommunityHealth Chicago <span class="rfree">FREE</span></div><div class="rdesc" data-en="Free regular care and women&#8217;s health care for women without insurance at clinics around Chicago" data-es="Atenci&#243;n regular y de salud para mujeres gratis para quienes no tienen seguro, en cl&#237;nicas por todo Chicago">Free regular care and women&#8217;s health care for women without insurance at clinics around Chicago</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://chicago.medicine.uic.edu/chicago-research/centers/charm/" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="CHARM Center at UIC" data-es="Centro CHARM en UIC">CHARM Center at UIC</div><div class="rdesc" data-en="Menopause research and care that puts fair health for all first, at the University of Illinois Chicago" data-es="Investigaci&#243;n y atenci&#243;n de la menopausia que pone primero la salud justa para todas, en la Universidad de Illinois Chicago">Menopause research and care that puts fair health for all first, at the University of Illinois Chicago</div></div><div class="rarrow">&#8250;</div></a>
+    <div class="rgl" data-en="Care by phone (no in-person visit needed)" data-es="Atenci&#243;n por tel&#233;fono (no se necesita visita en persona)">Care by phone (no in-person visit needed)</div>
+    <a class="ri" href="https://joinmidi.com" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="Midi Health <span class=&quot;rfree&quot;>TAKES MEDICAID</span>" data-es="Midi Health <span class=&quot;rfree&quot;>TOMA MEDICAID</span>">Midi Health <span class="rfree">TAKES MEDICAID</span></div><div class="rdesc" data-en="Menopause clinic by phone or computer. Takes Medicaid in Illinois. First visit is often free or under $30. Visit joinmidi.com." data-es="Cl&#237;nica de menopausia por tel&#233;fono o computadora. Toma Medicaid en Illinois. La primera visita a menudo es gratis o menos de $30. Visita joinmidi.com.">Menopause clinic by phone or computer. Takes Medicaid in Illinois. First visit is often free or under $30. Visit joinmidi.com.</div></div><div class="rarrow">&#8250;</div></a>
+    <div class="rgl" data-en="Free learning resources" data-es="Recursos gratis para aprender">Free learning resources</div>
+    <a class="ri" href="https://menopause.org/for-women" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="The Menopause Society <span class=&quot;rfree&quot;>FREE</span>" data-es="The Menopause Society <span class=&quot;rfree&quot;>GRATIS</span>">The Menopause Society <span class="rfree">FREE</span></div><div class="rdesc" data-en="Trusted, research-backed learning from experts in women&#8217;s health in midlife. Visit menopause.org." data-es="Aprendizaje confiable y basado en investigaci&#243;n, hecho por expertas en salud de mujeres en la mediana edad. Visita menopause.org.">Trusted, research-backed learning from experts in women&#8217;s health in midlife. Visit menopause.org.</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://www.womenshealth.gov/menopause" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="Office on Women&#8217;s Health <span class=&quot;rfree&quot;>FREE</span>" data-es="Oficina de Salud de la Mujer <span class=&quot;rfree&quot;>GRATIS</span>">Office on Women&#8217;s Health <span class="rfree">FREE</span></div><div class="rdesc" data-en="Easy-to-read guides on symptoms, care, and healthy aging. Visit womenshealth.gov." data-es="Gu&#237;as f&#225;ciles de leer sobre s&#237;ntomas, atenci&#243;n y c&#243;mo envejecer con salud. Visita womenshealth.gov.">Easy-to-read guides on symptoms, care, and healthy aging. Visit womenshealth.gov.</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://orwh.od.nih.gov/research/sponsored-research/menopause" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="NIH Menopause Portal <span class=&quot;rfree&quot;>FREE</span>" data-es="Portal de Menopausia del NIH <span class=&quot;rfree&quot;>GRATIS</span>">NIH Menopause Portal <span class="rfree">FREE</span></div><div class="rdesc" data-en="A free government site, available in many languages. Visit orwh.od.nih.gov." data-es="Un sitio gratis del gobierno, disponible en muchos idiomas. Visita orwh.od.nih.gov.">A free government site, available in many languages. Visit orwh.od.nih.gov.</div></div><div class="rarrow">&#8250;</div></a>
+    <div class="rgl" data-en="Mental health and crisis help" data-es="Salud mental y ayuda en crisis">Mental health and crisis help</div>
+    <a class="ri" href="tel:988"><div class="rd" style="background:var(--rose)"></div><div class="rinfo"><div class="rn" data-en="988 Suicide &amp; Crisis Lifeline <span class=&quot;rfree&quot;>FREE 24/7</span>" data-es="L&#237;nea 988 de Suicidio y Crisis <span class=&quot;rfree&quot;>GRATIS 24/7</span>">988 Suicide &amp; Crisis Lifeline <span class="rfree">FREE 24/7</span></div><div class="rdesc" data-en="Call or text 988 for private help with any mental health crisis." data-es="Llama o env&#237;a un mensaje al 988 para recibir ayuda privada en cualquier crisis de salud mental.">Call or text 988 for private help with any mental health crisis.</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="tel:1-800-799-7233"><div class="rd" style="background:var(--rose)"></div><div class="rinfo"><div class="rn" data-en="National Domestic Violence Hotline <span class=&quot;rfree&quot;>FREE 24/7</span>" data-es="L&#237;nea Nacional de Violencia Dom&#233;stica <span class=&quot;rfree&quot;>GRATIS 24/7</span>">National Domestic Violence Hotline <span class="rfree">FREE 24/7</span></div><div class="rdesc" data-en="1-800-799-7233. Call or text. Private, available in 200+ languages." data-es="1-800-799-7233. Llama o env&#237;a un mensaje. Privado, disponible en m&#225;s de 200 idiomas.">1-800-799-7233. Call or text. Private, available in 200+ languages.</div></div><div class="rarrow">&#8250;</div></a>
+  </div>
+  <div class="sp"></div>
+</div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- S7 8-WEEK FOLLOW-UP -->
+<div class="screen" id="s7">
+<div class="sb">
+  <div class="tag tfu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5z" clip-rule="evenodd"/></svg><span data-en="8-week follow-up (T3)" data-es="Seguimiento de 8 semanas (T3)">8-week follow-up (T3)</span></div>
+  <div class="title" data-en="Time for your follow-up!" data-es="&#161;Es hora de tu seguimiento!">Time for your follow-up!</div>
+  <div class="bt" data-en="It has been 8 weeks since you used the Menopause Navigator. Your follow-up survey takes about 10 minutes and helps us learn if this tool made a lasting change for you." data-es="Han pasado 8 semanas desde que usaste el Navegador de Menopausia. Tu encuesta de seguimiento toma como 10 minutos y nos ayuda a saber si esta herramienta hizo un cambio duradero para ti.">It has been 8 weeks since you used the Menopause Navigator. Your follow-up survey takes about 10 minutes and helps us learn if this tool made a lasting change for you.</div>
+  <div class="baff" data-en="Thank you for coming back. Your experience matters, and you are helping build better health resources for women in our community." data-es="Gracias por volver. Tu experiencia importa, y est&#225;s ayudando a construir mejores recursos de salud para las mujeres de nuestra comunidad.">Thank you for coming back. Your experience matters, and you are helping build better health resources for women in our community.</div>
+  <div class="sh" style="margin-bottom:8px;" data-en="What today&#8217;s survey asks" data-es="Lo que pregunta la encuesta de hoy">What today&#8217;s survey asks</div>
+  <div class="fuitems">
+    <div class="fuitem"><span class="fuchk"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207z" clip-rule="evenodd"/></svg></span><span data-en="16 questions about how sure you feel about your health choices" data-es="16 preguntas sobre qu&#233; tan segura te sientes con tus decisiones de salud">16 questions about how sure you feel about your health choices</span></div>
+    <div class="fuitem"><span class="fuchk"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207z" clip-rule="evenodd"/></svg></span><span data-en="6 questions about how well you feel you can take care of your health" data-es="6 preguntas sobre qu&#233; tan bien sientes que puedes cuidar tu salud">6 questions about how well you feel you can take care of your health</span></div>
+    <div class="fuitem"><span class="fuchk"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207z" clip-rule="evenodd"/></svg></span><span data-en="11 questions about how you are feeling now" data-es="11 preguntas sobre c&#243;mo te sientes ahora">11 questions about how you are feeling now</span></div>
+  </div>
+  <div class="bpriv"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 1a5 5 0 0 0-5 5v3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-8a3 3 0 0 0-3-3h-1V6a5 5 0 0 0-5-5zm3 8V6a3 3 0 1 0-6 0v3h6z" clip-rule="evenodd"/></svg></span><span data-en="Still fully private. Your answers have no name on them. No one at WIND or any partner group can see your own answers." data-es="Sigue siendo totalmente privado. Tus respuestas no tienen tu nombre. Nadie en WIND ni en ning&#250;n grupo asociado puede ver tus respuestas.">Still fully private. Your answers have no name on them. No one at WIND or any partner group can see your own answers.</span></div>
+  <div class="rsec">
+    <div class="rtitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689z" clip-rule="evenodd"/><path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.43z"/></svg><span data-en="Your resources, still here for you" data-es="Tus recursos, siguen aqu&#237; para ti">Your resources, still here for you</span></div>
+    <a class="ri" href="https://joinmidi.com" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="Midi Health <span class=&quot;rfree&quot;>ACCEPTS MEDICAID</span>" data-es="Midi Health <span class=&quot;rfree&quot;>TOMA MEDICAID</span>">Midi Health <span class="rfree">ACCEPTS MEDICAID</span></div><div class="rdesc" data-en="Virtual menopause care, no in-person visit. Visit joinmidi.com." data-es="Atenci&#243;n de menopausia por tel&#233;fono o computadora, sin visita en persona. Visita joinmidi.com.">Virtual menopause care, no in-person visit. Visit joinmidi.com.</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="City of Chicago Health Center Finder <span class=&quot;rfree&quot;>SLIDING SCALE</span>" data-es="Buscador de Centros de Salud de la Ciudad de Chicago <span class=&quot;rfree&quot;>PAGA LO QUE PUEDAS</span>">City of Chicago Health Center Finder <span class="rfree">SLIDING SCALE</span></div><div class="rdesc">chicago.gov</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="https://menopause.org/for-women" target="_blank" rel="noopener"><div class="rd"></div><div class="rinfo"><div class="rn" data-en="The Menopause Society <span class=&quot;rfree&quot;>FREE</span>" data-es="The Menopause Society <span class=&quot;rfree&quot;>GRATIS</span>">The Menopause Society <span class="rfree">FREE</span></div><div class="rdesc">menopause.org</div></div><div class="rarrow">&#8250;</div></a>
+    <a class="ri" href="tel:988"><div class="rd" style="background:var(--rose)"></div><div class="rinfo"><div class="rn" data-en="988 Crisis Lifeline <span class=&quot;rfree&quot;>FREE 24/7</span>" data-es="L&#237;nea 988 de Crisis <span class=&quot;rfree&quot;>GRATIS 24/7</span>">988 Crisis Lifeline <span class="rfree">FREE 24/7</span></div><div class="rdesc" data-en="Call or text 988" data-es="Llama o env&#237;a un mensaje al 988">Call or text 988</div></div><div class="rarrow">&#8250;</div></a>
+  </div>
+  <div class="sp"></div>
+</div>
+<div class="sf">
+  <button class="btn" style="background:var(--mauve)" onclick="goToSurvey('T3',0)" data-en="Complete T3 follow-up survey &#8594;" data-es="Completar la encuesta de seguimiento T3 &#8594;">Complete T3 follow-up survey &#8594;</button>
+  <button class="btng" data-en="Remind me later" data-es="Recu&#233;rdame despu&#233;s">Remind me later</button>
+</div>
+<div class="ndots"></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+<!-- ABOUT SCREEN -->
+<div class="screen" id="sAbout">
+<div class="sb">
+  <div class="tag tm1" data-en="&#9432; About this tool" data-es="&#9432; Acerca de esta herramienta">&#9432; About this tool</div>
+  <div class="title" data-en="About <em>this tool</em>" data-es="Acerca de <em>esta herramienta</em>">About <em>this tool</em></div>
+  <div class="bt" data-en="The Menopause Navigator was built to give clear, evidence-based information about menopause and the choices you have for care. Every section was written from current national menopause practice guidelines and federal women&#8217;s health resources. The clinical content was reviewed by the <strong>DNP project committee</strong> (board-certified clinicians) as part of standard DNP project oversight before the tool was made available to participants." data-es="El Navegador de Menopausia se cre&#243; para ofrecer informaci&#243;n clara y basada en evidencia sobre la menopausia y las opciones de atenci&#243;n que tienes. Cada secci&#243;n se escribi&#243; a partir de gu&#237;as nacionales actuales para la pr&#225;ctica en menopausia y recursos federales de salud de la mujer. El contenido cl&#237;nico fue revisado por el <strong>comit&#233; del proyecto DNP</strong> (cl&#237;nicos certificados) como parte de la supervisi&#243;n est&#225;ndar del proyecto DNP antes de que la herramienta se pusiera a disposici&#243;n de las participantes.">The Menopause Navigator was built to give clear, evidence-based information about menopause and the choices you have for care. Every section was written from current national menopause practice guidelines and federal women&#8217;s health resources. The clinical content was reviewed by the <strong>DNP project committee</strong> (board-certified clinicians) as part of standard DNP project oversight before the tool was made available to participants.</div>
+
+  <div class="sh" style="margin-top:6px;margin-bottom:10px;" data-en="Where the content comes from" data-es="De d&#243;nde viene el contenido">Where the content comes from</div>
+
+  <div class="fc">
+    <div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.25 4.533A9.707 9.707 0 0 0 6 3a9.735 9.735 0 0 0-3.25.555.75.75 0 0 0-.5.707v14.25a.75.75 0 0 0 1 .707A8.237 8.237 0 0 1 6 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0 1 18 18.75c.966 0 1.89.166 2.75.47a.75.75 0 0 0 1-.708V4.262a.75.75 0 0 0-.5-.707A9.735 9.735 0 0 0 18 3a9.707 9.707 0 0 0-5.25 1.533v16.103z"/></svg></span><span data-en="Clinical practice guidelines &amp; consensus statements" data-es="Gu&#237;as cl&#237;nicas y declaraciones de consenso">Clinical practice guidelines &amp; consensus statements</span></div>
+    <ul class="cite-list">
+      <li>The Menopause Society. (2022). The 2022 hormone therapy position statement of The North American Menopause Society. <em>Menopause, 29</em>(7), 767&#8211;794.</li>
+      <li>The Menopause Society. (2023). The 2023 nonhormone therapy position statement of The North American Menopause Society. <em>Menopause, 30</em>(6), 573&#8211;590.</li>
+      <li>U.S. Preventive Services Task Force. (2022). Hormone therapy for the primary prevention of chronic conditions in postmenopausal persons: USPSTF recommendation statement. <em>JAMA, 328</em>(17), 1740&#8211;1746.</li>
+      <li>American College of Obstetricians and Gynecologists. (2014, reaffirmed 2024). Management of menopausal symptoms (ACOG Practice Bulletin No. 141). <em>Obstetrics &amp; Gynecology, 123</em>(1), 202&#8211;216.</li>
+    </ul>
+  </div>
+
+  <div class="fc">
+    <div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5zM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5z" clip-rule="evenodd"/></svg></span><span data-en="Research on midlife health and health disparities" data-es="Investigaci&#243;n sobre salud en la mediana edad y desigualdades en salud">Research on midlife health and health disparities</span></div>
+    <ul class="cite-list">
+      <li>Geronimus, A. T., Hicken, M., Keene, D., &amp; Bound, J. (2006). &#8220;Weathering&#8221; and age patterns of allostatic load scores among blacks and whites in the United States. <em>American Journal of Public Health, 96</em>(5), 826&#8211;833.</li>
+      <li>Harlow, S. D., Burnett-Bowie, S.-A. M., Greendale, G. A., Thurston, R. C., Hess, R., Matthews, K. A., &amp; El Khoudary, S. R. (2022). Disparities in reproductive aging and midlife health between Black and White women: The Study of Women&#8217;s Health Across the Nation (SWAN). <em>Women&#8217;s Midlife Health, 8</em>(1), 3.</li>
+    </ul>
+  </div>
+
+  <div class="fc">
+    <div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M21.721 12.752a9.711 9.711 0 0 0-.945-5.003 12.754 12.754 0 0 1-4.339 2.708 18.991 18.991 0 0 1-.214 4.772 17.165 17.165 0 0 0 5.498-2.477zM14.634 15.55a17.324 17.324 0 0 0 .332-4.647c-.952.227-1.945.347-2.966.347-1.021 0-2.014-.12-2.966-.347a17.515 17.515 0 0 0 .332 4.647 17.385 17.385 0 0 0 5.268 0zM9.772 17.119a18.963 18.963 0 0 0 4.456 0A17.182 17.182 0 0 1 12 21.724a17.18 17.18 0 0 1-2.228-4.605zM7.777 15.23a18.87 18.87 0 0 1-.214-4.774 12.753 12.753 0 0 1-4.34-2.708 9.711 9.711 0 0 0-.944 5.004 17.165 17.165 0 0 0 5.498 2.477zM21.356 14.752a9.765 9.765 0 0 1-7.478 6.817 18.64 18.64 0 0 0 1.988-4.718 18.627 18.627 0 0 0 5.49-2.098zM2.644 14.752c1.682.971 3.53 1.688 5.49 2.099a18.64 18.64 0 0 0 1.988 4.718 9.765 9.765 0 0 1-7.478-6.816zM13.878 2.43a9.755 9.755 0 0 1 6.116 3.986 11.267 11.267 0 0 1-3.746 2.504 18.63 18.63 0 0 0-2.37-6.49zM12 2.276a17.152 17.152 0 0 1 2.805 7.121c-.897.23-1.837.353-2.805.353-.968 0-1.908-.122-2.805-.353A17.151 17.151 0 0 1 12 2.276zM10.122 2.43a18.629 18.629 0 0 0-2.37 6.49 11.266 11.266 0 0 1-3.746-2.504 9.754 9.754 0 0 1 6.116-3.985z" clip-rule="evenodd"/></svg></span><span data-en="Plain-language &amp; patient-education resources" data-es="Recursos en lenguaje sencillo y educaci&#243;n para pacientes">Plain-language &amp; patient-education resources</span></div>
+    <ul class="cite-list">
+      <li>U.S. Department of Health and Human Services, Office on Women&#8217;s Health. Menopause. <a href="https://www.womenshealth.gov/menopause" target="_blank" rel="noopener">womenshealth.gov/menopause</a></li>
+      <li>National Institute on Aging. What is menopause? <a href="https://www.nia.nih.gov/health/menopause" target="_blank" rel="noopener">nia.nih.gov/health/menopause</a></li>
+      <li>NIH Office of Research on Women&#8217;s Health. Menopause portal. <a href="https://orwh.od.nih.gov/research/sponsored-research/menopause" target="_blank" rel="noopener">orwh.od.nih.gov</a></li>
+    </ul>
+  </div>
+
+  <div class="fc">
+    <div class="fct"><span class="ficon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .75a8.25 8.25 0 0 0-4.135 15.39c.686.398 1.115 1.008 1.134 1.623a.75.75 0 0 0 .577.706c.352.083.71.148 1.074.195.323.041.6-.218.6-.544v-4.661a6.714 6.714 0 0 1-.937-.171.75.75 0 1 1 .374-1.453 5.261 5.261 0 0 0 2.626 0 .75.75 0 1 1 .374 1.452 6.712 6.712 0 0 1-.937.172v4.66c0 .327.277.586.6.545.364-.047.722-.112 1.074-.195a.75.75 0 0 0 .577-.706c.02-.615.448-1.225 1.134-1.623A8.25 8.25 0 0 0 12 .75z"/><path fill-rule="evenodd" d="M9.013 19.9a.75.75 0 0 1 .877-.597 11.319 11.319 0 0 0 4.22 0 .75.75 0 1 1 .293 1.471 12.819 12.819 0 0 1-4.806 0 .75.75 0 0 1-.584-.874z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M9.754 22.344a.75.75 0 0 1 .824-.668 13.682 13.682 0 0 0 2.844 0 .75.75 0 1 1 .156 1.492 15.156 15.156 0 0 1-3.156 0 .75.75 0 0 1-.668-.824z" clip-rule="evenodd"/></svg></span><span data-en="Decision-aid framework" data-es="Marco para ayudas a la decisi&#243;n">Decision-aid framework</span></div>
+    <ul class="cite-list">
+      <li>Stacey, D., L&#233;gar&#233;, F., Lewis, K., et al. (2017). Decision aids for people facing health treatment or screening decisions. <em>Cochrane Database of Systematic Reviews</em>, (4), CD001431.</li>
+      <li>International Patient Decision Aid Standards (IPDAS) Collaboration. (2013). IPDAS criteria for assessing the quality of patient decision aids.</li>
+    </ul>
+  </div>
+
+  <div class="bslate" data-en="The tool <strong>does not give personalized medical advice</strong> and does not replace care from a healthcare provider. If something does not feel right to you, please talk to a provider you trust. The &#8220;Resources&#8221; page lists free and low-cost places in Chicago where you can get care." data-es="Esta herramienta <strong>no ofrece consejo m&#233;dico personalizado</strong> y no reemplaza la atenci&#243;n de un proveedor de salud. Si algo no se siente bien, por favor habla con un proveedor de confianza. La p&#225;gina de &#8220;Recursos&#8221; tiene lugares gratuitos y de bajo costo en Chicago donde puedes recibir atenci&#243;n.">The tool <strong>does not give personalized medical advice</strong> and does not replace care from a healthcare provider. If something does not feel right to you, please talk to a provider you trust. The &#8220;Resources&#8221; page lists free and low-cost places in Chicago where you can get care.</div>
+  <div class="sp"></div>
+</div>
+<div class="sf"><button class="btn" onclick="closeAbout()" data-en="&#8592; Back" data-es="&#8592; Atr&#225;s">&#8592; Back</button></div>
+<div class="crisis-footer">Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.</div>
+</div>
+
+</div>
+<script>
+var cur=0,tot=6,m1s=0;
+var vans=[null,null,null,null,null,null];
+var vlbls=['avoiding medicine','sleeping better','managing without a doctor visit','protecting your bones and heart','feeling in control','feeling better quickly'];
+var selActIdx=-1,selActTxt='';
+var labs=['Consent','Module 1','Module 2','Module 3','Module 4','Summary'];
+var prg=[0,20,40,60,80,100];
+
+// === SURVEY URLS ===
+// Paste your Qualtrics survey URLs here. Leave empty to use in-tool fallback
+// (useful for demos before the surveys are live).
+var SURVEY_URLS={
+  T2:'', // Post-test, shown after the summary screen
+  T3:''  // 8-week follow-up
+};
+
+// === URL PARAM FORWARDING ===
+// Any params on the navigator's URL (e.g. ?pid=ABC123 from T1) are captured
+// here, persisted across save/resume, and appended to T2/T3 redirects so the
+// participant ID flows through every survey.
+function captureUrlParams(){
+  var p={};
+  var s=window.location.search;
+  if(s){
+    s.substring(1).split('&').forEach(function(pair){
+      var i=pair.indexOf('=');if(i<=0)return;
+      try{
+        var k=decodeURIComponent(pair.substring(0,i));
+        var v=decodeURIComponent(pair.substring(i+1));
+        if(k)p[k]=v;
+      }catch(e){}
+    });
+  }
+  return p;
+}
+var urlParams=captureUrlParams();
+
+function appendParams(url,params){
+  var parts=[];
+  for(var k in params){
+    if(params.hasOwnProperty(k)&&params[k]!==''&&params[k]!=null){
+      parts.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
+    }
+  }
+  if(parts.length===0)return url;
+  return url+(url.indexOf('?')===-1?'?':'&')+parts.join('&');
+}
+
+function goToSurvey(key,fallbackScreen){
+  var url=SURVEY_URLS[key];
+  if(!url){if(typeof fallbackScreen==='number')goTo(fallbackScreen);return;}
+  url=appendParams(url,urlParams);
+  try{
+    if(window.top&&window.top!==window){window.top.location.href=url;return;}
+  }catch(e){}
+  window.location.href=url;
+}
+var actionDetails=[
+  'Use the <a href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank">City of Chicago Health Center Finder \u203a</a> to find the closest clinic. All take Medicaid, have free language help, and most have walk-in hours.',
+  'Take a picture of your summary at the end of this tool. Even saying \u201cI learned that what I\u2019m feeling is real and has a name\u201d is enough to start a talk.',
+  'Start with one thing: keep your bedroom cooler at night, or cut back on a drink (alcohol or caffeine) that tends to set off your flashes. Small changes you can stick with help most.',
+  '<a href="https://joinmidi.com" target="_blank">Midi Health \u203a</a> takes Medicaid in Illinois. No in-person visit needed. You can book a visit in about 5 minutes from this screen.',
+  'Take a picture or print your summary. Bring it and say: \u201cI finished a menopause health program and would like to talk about my options.\u201d Your summary speaks for you.',
+  'That is a real choice too. Save this tool in your phone. Come back when you are ready. Your resources will still be here.'
+];
+
+var STORAGE_KEY='menopause_nav_state_v2';
+var _loading=false;
+
+function saveState(){
+  if(_loading)return;
+  try{
+    var syms=[];
+    document.querySelectorAll('#schips .chip.sel').forEach(function(c){var m=(c.getAttribute('onclick')||'').match(/'([a-z]+)'/);if(m)syms.push(m[1]);});
+    var state={
+      v:1,ts:Date.now(),lang:currentLang,cur:cur,m1s:m1s,
+      syms:syms,vans:vans.slice(),
+      selA:{idx:selActIdx,txt:selActTxt},
+      cact:(document.getElementById('cact')||{}).value||'',
+      params:urlParams
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return;
+    var s=JSON.parse(raw);
+    if(!s||s.v!==1)return;
+    _loading=true;
+    if(s.params){
+      for(var pk in s.params){
+        if(s.params.hasOwnProperty(pk)&&!urlParams[pk])urlParams[pk]=s.params[pk];
+      }
+    }
+    if(s.lang&&s.lang!==currentLang){
+      var btn=null;
+      document.querySelectorAll('.lb').forEach(function(b){if(b.textContent.trim().toLowerCase().indexOf(s.lang)===0)btn=b;});
+      setL(s.lang,btn);
+    }
+    if(Array.isArray(s.syms)&&s.syms.length>0){
+      document.querySelectorAll('#schips .chip').forEach(function(c){
+        var m=(c.getAttribute('onclick')||'').match(/'([a-z]+)'/);
+        if(m&&s.syms.indexOf(m[1])!==-1)c.classList.add('sel');
+      });
+      renderSympDtl();
+    }
+    if(Array.isArray(s.vans)){
+      vans=s.vans.slice();
+      for(var i=0;i<6;i++){
+        if(vans[i]){
+          var row=document.getElementById('vr'+i);
+          if(row){
+            row.classList.add('done');
+            row.querySelectorAll('.vb').forEach(function(b){
+              var onc=b.getAttribute('onclick')||'';
+              if(onc.indexOf("'"+vans[i]+"'")!==-1)b.classList.add('sel');
+            });
+          }
+        }
+      }
+      updRefl();updSug();
+    }
+    if(s.selA&&typeof s.selA.idx==='number'&&s.selA.idx>=0){
+      selActIdx=s.selA.idx;
+      var ac=document.getElementById('ac'+selActIdx);
+      if(ac){
+        ac.classList.add('sel');
+        var atxt=ac.querySelector('.atxt');
+        selActTxt=atxt?atxt.textContent:(s.selA.txt||'');
+        var ad=document.getElementById('ad'+selActIdx);
+        if(ad)ad.classList.add('show');
+      }
+    }
+    if(s.cact){
+      var cactEl=document.getElementById('cact');
+      if(cactEl)cactEl.value=s.cact;
+    }
+    if(typeof s.m1s==='number'&&s.m1s>0){
+      m1s=s.m1s;
+      ['m1a','m1b','m1c','m1d'].forEach(function(id,i){
+        var el=document.getElementById(id);
+        if(el)el.style.display=i===m1s?'':'none';
+        var sd=document.getElementById('sd'+i);
+        if(sd){
+          sd.classList.remove('active','done');
+          if(i===m1s)sd.classList.add('active');
+          else if(i<m1s)sd.classList.add('done');
+        }
+      });
+      var bk=document.getElementById('m1bk'),nx=document.getElementById('m1nx');
+      if(bk)bk.style.visibility=m1s===0?'hidden':'visible';
+      if(nx)nx.textContent=m1s===3?i18n[currentLang].m1NextOpts:i18n[currentLang].m1Next;
+    }
+    if(typeof s.cur==='number'&&s.cur>0){
+      goTo(s.cur);
+      if(s.cur===6)bldSum();
+    }
+  }catch(e){}
+  finally{_loading=false;}
+}
+
+function clearState(){try{localStorage.removeItem(STORAGE_KEY);}catch(e){}}
+
+function startOver(){
+  if(confirm(i18n[currentLang].confirmStartOver)){
+    clearState();
+    location.reload();
+  }
+}
+
+function renderSympDtl(){
+  var selKeys=[];
+  document.querySelectorAll('#schips .chip.sel').forEach(function(c){var m=(c.getAttribute('onclick')||'').match(/'([a-z]+)'/);if(m)selKeys.push(m[1]);});
+  var dtl=document.getElementById('sdtl');
+  var pa=document.getElementById('phys-affirm');
+  if(!dtl)return;
+  if(selKeys.length===0){dtl.classList.remove('show');dtl.innerHTML='';if(pa)pa.style.display='none';return;}
+  var dict=i18n[currentLang].sympDtls;
+  var html='<div class="sdtl-title">'+i18n[currentLang].sdtlTitle+'</div><div class="sdtl-items">';
+  selKeys.forEach(function(k){var d=dict[k];if(d)html+='<div class="sdtl-item"><div class="sdtl-name">'+d.n+'</div><div class="sdtl-why">'+d.w+'</div></div>';});
+  html+='</div>';
+  dtl.innerHTML=html;dtl.classList.add('show');
+  if(pa)pa.style.display='block';
+}
+
+function chipSel(el,key){
+  el.classList.toggle('sel');
+  renderSympDtl();
+  updateGates();
+  saveState();
+}
+
+function togOpt(i){var c=document.getElementById('oc'+i);var was=c.classList.contains('open');document.querySelectorAll('.ocard').forEach(function(x){x.classList.remove('open');});if(!was)c.classList.add('open');}
+
+function fillTpl(tpl,vars){return tpl.replace(/\{(\w+)\}/g,function(_,k){return vars[k]||'';});}
+function selV(btn,i,v){btn.closest('.vbtns').querySelectorAll('.vb').forEach(function(b){b.classList.remove('sel');});btn.classList.add('sel');vans[i]=v;document.getElementById('vr'+i).classList.add('done');updRefl();updSug();updateGates();saveState();}
+function updRefl(){
+  var L=i18n[currentLang];
+  var labels=L.vlbls;
+  var alot=[],some=[];
+  for(var i=0;i<6;i++){if(vans[i]==='A lot')alot.push(labels[i]);else if(vans[i]==='Somewhat')some.push(labels[i]);}
+  var ans=vans.filter(function(v){return v!==null;}).length;
+  if(ans===0){document.getElementById('vrefl').textContent=L.reflInit;return;}
+  var txt='';
+  if(alot.length>0&&some.length>0){txt=fillTpl(L.reflBoth,{alot:alot.join(L.joinComma),some:some.join(L.joinAnd)});}
+  else if(alot.length>0){txt=fillTpl(L.reflAlot,{alot:alot.join(L.joinAnd)});}
+  else if(some.length>0){txt=L.reflSome;}
+  else{txt=L.reflNone;}
+  document.getElementById('vrefl').innerHTML=txt;
+}
+function updSug(){
+  var L=i18n[currentLang];
+  var nm=vans[0]==='A lot',sl=vans[1]==='A lot',nd=vans[2]==='A lot',ans=vans.filter(function(v){return v!==null;}).length;
+  var box=document.getElementById('sug'),txt=document.getElementById('sugtext');
+  if(ans<3){box.style.display='none';return;}
+  box.style.display='block';
+  if(nm&&nd)txt.textContent=L.sugNmNd;
+  else if(sl&&!nd)txt.textContent=L.sugSl;
+  else if(nd)txt.textContent=L.sugNd;
+  else txt.textContent=L.sugDef;
+}
+
+function selA(el,idx,txt){
+  document.querySelectorAll('.acard').forEach(function(a){a.classList.remove('sel');});
+  document.querySelectorAll('.adetail').forEach(function(a){a.classList.remove('show');});
+  el.classList.add('sel');
+  var dtl=document.getElementById('ad'+idx);if(dtl)dtl.classList.add('show');
+  selActIdx=idx;
+  var atxt=el.querySelector('.atxt');
+  selActTxt=atxt?atxt.textContent:txt;
+  updateGates();
+  saveState();
+}
+
+function bldSum(){
+  var L=i18n[currentLang];
+  var labels=L.vlbls;
+  var alot=[];for(var i=0;i<6;i++){if(vans[i]==='A lot')alot.push(labels[i]);}
+  var pt;
+  if(alot.length===0)pt=L.sumDefault;
+  else if(alot.length===1)pt=fillTpl(L.sumSingle,{item:alot[0]});
+  else{var last=alot.pop();pt=fillTpl(L.sumMultiple,{list:alot.join(L.joinComma),last:last});}
+  document.getElementById('sprior').textContent=pt;
+  if(selActIdx>=0){var ac=document.getElementById('ac'+selActIdx);if(ac){var atxt=ac.querySelector('.atxt');if(atxt)selActTxt=atxt.textContent;}}
+  var ca=document.getElementById('cact').value.trim();
+  var act=ca||selActTxt||L.noStep;
+  document.getElementById('satext').textContent=act;
+  var nb=document.getElementById('snext'),nbb=document.getElementById('snext-body');
+  if(selActIdx>=0&&selActIdx<L.actionDetails.length&&!ca){nb.style.display='block';nbb.innerHTML=L.actionDetails[selActIdx];}
+  else{nb.style.display='none';}
+  var enc=alot.length>0&&act!==L.noStep?L.encWithStep:L.encNoStep;
+  document.getElementById('senc').textContent=enc;
+}
+
+function updH(){document.getElementById('plbl').textContent=labs[cur]||'';document.getElementById('pfill').style.width=prg[cur]+'%';}
+function bldDots(){document.querySelectorAll('.ndots').forEach(function(c){c.innerHTML='';for(var i=0;i<tot;i++){var d=document.createElement('div');d.className='dot'+(i===cur?' active':(i<cur?' done':''));(function(x){d.onclick=function(){goTo(x);};})(i);c.appendChild(d);}});}
+function goTo(n){document.getElementById('s'+cur).classList.remove('active');cur=n;document.getElementById('s'+cur).classList.add('active');updH();bldDots();window.scrollTo(0,0);document.getElementById('app').scrollTop=0;saveState();}
+
+var _aboutPrev=null;
+function openAbout(){
+  if(_aboutPrev!==null)return;
+  _aboutPrev=cur;
+  var prev=document.getElementById('s'+cur);
+  if(prev)prev.classList.remove('active');
+  document.getElementById('sAbout').classList.add('active');
+  window.scrollTo(0,0);
+  document.getElementById('app').scrollTop=0;
+}
+function closeAbout(){
+  if(_aboutPrev===null)return;
+  document.getElementById('sAbout').classList.remove('active');
+  var back=document.getElementById('s'+_aboutPrev);
+  if(back)back.classList.add('active');
+  _aboutPrev=null;
+  window.scrollTo(0,0);
+  document.getElementById('app').scrollTop=0;
+}
+
+// Soft engagement gating: Next button stays locked until the user touches the screen.
+// Returns whether the gated screen has been engaged with (so callers can skip work).
+function isM1bEngaged(){return document.querySelectorAll('#schips .chip.sel').length>0;}
+function isM3Engaged(){return vans.filter(function(v){return v!==null;}).length>0;}
+function isM4Engaged(){
+  if(selActIdx>=0)return true;
+  var ca=(document.getElementById('cact')||{}).value||'';
+  return ca.trim()!=='';
+}
+function setLocked(btnId,hintId,locked){
+  var btn=document.getElementById(btnId);
+  if(btn){if(locked)btn.classList.add('locked');else btn.classList.remove('locked');}
+  if(hintId){var h=document.getElementById(hintId);if(h){if(locked)h.classList.add('show');else h.classList.remove('show');}}
+}
+function updateGates(){
+  // m1b lives inside s1 with the shared m1nx button. Only gate when on the m1b sub-screen.
+  setLocked('m1nx','m1nxhint',m1s===1 && !isM1bEngaged());
+  setLocked('m3nx','m3nxhint',!isM3Engaged());
+  setLocked('m4nx','m4nxhint',!isM4Engaged());
+}
+function tryGoto(n,alsoBld){
+  var btnId=n===4?'m3nx':(n===5?'m4nx':null);
+  if(btnId){var b=document.getElementById(btnId);if(b&&b.classList.contains('locked'))return;}
+  goTo(n);
+  if(alsoBld)bldSum();
+}
+
+var m1subs=['m1a','m1b','m1c','m1d'];
+var m1count=4;
+function m1nav(d){
+  if(d>0 && m1s===1 && !isM1bEngaged())return; // gate: cannot advance from m1b without engagement
+  document.getElementById(m1subs[m1s]).style.display='none';
+  var sd=document.getElementById('sd'+m1s);sd.classList.remove('active');sd.classList.add('done');
+  m1s+=d;if(m1s<0)m1s=0;
+  if(m1s>=m1count){goTo(2);m1s=0;for(var i=0;i<m1count;i++){var e=document.getElementById('sd'+i);if(e){e.classList.remove('active','done');}}document.getElementById('sd0').classList.add('active');m1subs.forEach(function(id,i){document.getElementById(id).style.display=i===0?'':'none';});document.getElementById('m1bk').style.visibility='hidden';document.getElementById('m1nx').textContent=i18n[currentLang].m1Next;saveState();return;}
+  document.getElementById(m1subs[m1s]).style.display='';
+  document.getElementById('sd'+m1s).classList.remove('done');document.getElementById('sd'+m1s).classList.add('active');
+  document.getElementById('m1bk').style.visibility=m1s===0?'hidden':'visible';
+  document.getElementById('m1nx').textContent=m1s===m1count-1?i18n[currentLang].m1NextOpts:i18n[currentLang].m1Next;
+  document.getElementById('s1').scrollTop=0;
+  updateGates();
+  saveState();
+}
+
+function doBreak(id){var b=document.getElementById(id);var o=b.innerHTML;b.innerHTML=i18n[currentLang].breakSaved;b.style.color='var(--sage)';b.style.borderColor='var(--sage)';setTimeout(function(){b.innerHTML=o;b.style.color='';b.style.borderColor='';},2800);}
+function sshotTip(){alert(i18n[currentLang].sshotTip);}
+var currentLang='en';
+var i18n={
+  en:{
+    pj:'Your journey',
+    labs:['Consent','Module 1','Module 2','Module 3','Module 4','Summary'],
+    crisis:'Need support right now? <a href="tel:988">Call or text 988</a>. Free, 24/7.',
+    sdtlTitle:'What is behind your symptoms',
+    m1Next:'Next →',
+    m1NextOpts:'Next: your options →',
+    breakBtn:'▮▮ Take a break (progress saved)',
+    breakSaved:'✓ Progress saved. Come back anytime.',
+    vlbls:['avoiding medicine','sleeping better','managing without a doctor visit','protecting your bones and heart','feeling in control','feeling better quickly'],
+    reflInit:'Your reflection will appear here as you answer the questions above.',
+    reflBoth:'It sounds like what matters most to you is {alot}. You also care about {some}. A plan that fits these things is the right plan for you.',
+    reflAlot:'It sounds like what matters most to you is {alot}. Any choice you make should put these first, and options that do not fit them are likely not the right pick for you right now.',
+    reflSome:'You have mixed feelings about most of these, and that is normal. You are still figuring out what matters most, and that is okay. Keep going. It will get clearer.',
+    reflNone:'It sounds like none of these feel like a big deal right now. That is okay too. Keep answering and this will update.',
+    joinAnd:' and ',
+    joinComma:', ',
+    sugNmNd:'You care most about options without medicine or a doctor visit. Daily habit changes and care by phone may be a good place to start.',
+    sugSl:'Sleep is a big deal for you. A talk with a provider about hormone therapy or non-hormone medicine could bring real relief fairly fast.',
+    sugNd:'You want to start without an in-person visit. Midi Health lets you see a menopause provider from your phone, with no in-person visit needed. It takes Medicaid.',
+    sugDef:'From what you told us, you are ready to take a step. Choose below and we will tell you how.',
+    actionDetails:[
+      'Use the <a href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank">City of Chicago Health Center Finder ›</a> to find the closest clinic. All take Medicaid, have free language help, and most have walk-in hours.',
+      'Take a picture of your summary at the end of this tool. Even saying “I learned that what I’m feeling is real and has a name” is enough to start a talk.',
+      'Start with one thing: keep your bedroom cooler at night, or cut back on a drink (alcohol or caffeine) that tends to set off your flashes. Small changes you can stick with help most.',
+      '<a href="https://joinmidi.com" target="_blank">Midi Health ›</a> takes Medicaid in Illinois. No in-person visit needed. You can book a visit in about 5 minutes from this screen.',
+      'Take a picture or print your summary. Bring it and say: “I finished a menopause health program and would like to talk about my options.” Your summary speaks for you.',
+      'That is a real choice too. Save this tool in your phone. Come back when you are ready. Your resources will still be here.'
+    ],
+    sumDefault:'You are still figuring out what matters most to you, and that is okay. The resources below can help you as you sort it out.',
+    sumSingle:'You told us that “{item}” matters most to you. Your plan fits this.',
+    sumMultiple:'You told us that {list} and {last} matter most to you. Your plan fits these.',
+    noStep:'No step selected yet.',
+    encWithStep:'You know what matters to you, and you have picked a step that fits it. That is real progress. Keep this summary and come back to it any time you need a reminder.',
+    encNoStep:'You took a big step today by learning about your health. This summary belongs to you. Keep it.',
+    sshotTip:'To save your summary:\n\niPhone: Press the side button and volume up at the same time.\n\nAndroid: Press the power button and volume down at the same time.\n\nOr tap Print to save as a PDF.',
+    startOver:'Start over',
+    confirmStartOver:'Are you sure you want to start over? This will erase all your answers and progress.',
+    sympDtls:{
+      hf:{n:'Hot flashes',w:'When estrogen drops, it changes the part of your brain that controls body heat. Your brain thinks you are too hot and tries to cool you down. That is the flash. Hormone therapy works best, but deep breathing, cool rooms, and other steps help too.'},
+      ns:{n:'Night sweats',w:'Night sweats are hot flashes that happen while you sleep. They break up your sleep, which then leads to tiredness, brain fog, and mood changes during the day. It is all tied together. Treating night sweats often helps many symptoms at once.'},
+      sl:{n:'Trouble sleeping',w:'Estrogen and progesterone both shape how you sleep. When they drop, it can be harder to fall asleep, stay asleep, and reach deep sleep. This is one of the menopause symptoms that often does not get enough help, and there are many things that work, both with and without hormones.'},
+      jp:{n:'Joint pain',w:'Estrogen helps keep swelling down in the body. When levels drop, swelling in joints can go up. This is real, and it can be measured. It often gets missed as a menopause symptom. Moving your body often and some medicines can help.'},
+      ip:{n:'Irregular periods',w:'Perimenopause makes periods uneven. They may be heavier, lighter, more often, or skipped. This can go on for years before menopause. Tracking your cycle and symptoms helps providers give you better care.'},
+      bl:{n:'Bladder changes',w:'Estrogen helps keep the bladder healthy. When levels drop, this tissue gets thinner and more sensitive. That can lead to leaking, sudden urges, or going often. This is very treatable, including with low-dose vaginal estrogen, which has very small effects on the rest of your body.'},
+      vd:{n:'Vaginal dryness',w:'When estrogen drops, the tissue down there gets thin and dry. This can make sex painful or uncomfortable and makes infections more likely. It is very treatable. Low-dose vaginal estrogen works best, and it is safe for most women, even those who cannot use other hormone therapy.'},
+      wt:{n:'Weight changes',w:'Hormone changes in menopause shift how and where the body stores fat, often moving weight to the belly even when you eat and move the same. This is your body changing, not a personal failing. Lifting weights or doing strength moves is one of the things that helps most, along with other steps.'},
+      hp:{n:'Heart pounding',w:'A racing, fluttering, or pounding heartbeat is a common menopause symptom. It is usually caused by the same body-heat changes that cause hot flashes. It is usually harmless, but tell a provider if it is new or if it worries you.'}
+    }
+  },
+  es:{
+    pj:'Tu camino',
+    labs:['Consentimiento','Módulo 1','Módulo 2','Módulo 3','Módulo 4','Resumen'],
+    crisis:'¿Necesitas apoyo ahora? <a href="tel:988">Llama o envía un mensaje al 988</a>. Gratis, 24/7.',
+    sdtlTitle:'Qué hay detrás de tus síntomas',
+    m1Next:'Siguiente →',
+    m1NextOpts:'Siguiente: tus opciones →',
+    breakBtn:'▮▮ Toma un descanso (tu progreso queda guardado)',
+    breakSaved:'✓ Progreso guardado. Vuelve cuando quieras.',
+    vlbls:['evitar medicinas','dormir mejor','manejarte sin una visita al doctor','proteger tus huesos y corazón','sentirte a cargo','sentirte mejor rápido'],
+    reflInit:'Tu reflexión aparecerá aquí cuando contestes las preguntas de arriba.',
+    reflBoth:'Parece que lo que más te importa es {alot}. También te importa {some}. Un plan que se ajuste a esto es el plan correcto para ti.',
+    reflAlot:'Parece que lo que más te importa es {alot}. Cualquier decisión que tomes debería poner esto primero, y las opciones que no se ajusten probablemente no son la mejor opción para ti ahora.',
+    reflSome:'Tienes sentimientos mezclados sobre la mayoría de esto, y eso es normal. Todavía estás descubriendo qué te importa más, y eso está bien. Sigue adelante. Se aclarará.',
+    reflNone:'Parece que ninguna de estas se siente importante ahora. Eso también está bien. Sigue contestando y esto se actualizará.',
+    joinAnd:' y ',
+    joinComma:', ',
+    sugNmNd:'Lo que más te importa son las opciones sin medicinas y sin visita al doctor. Los cambios en tus hábitos diarios y la atención por teléfono pueden ser un buen lugar para empezar.',
+    sugSl:'El sueño es muy importante para ti. Una conversación con un proveedor sobre terapia hormonal o medicinas sin hormonas podría traerte alivio real bastante rápido.',
+    sugNd:'Quieres empezar sin una visita en persona. Midi Health te deja ver a un proveedor de menopausia desde tu teléfono, sin visita en persona. Toma Medicaid.',
+    sugDef:'Por lo que nos dijiste, estás lista para dar un paso. Elige abajo y te diremos cómo.',
+    actionDetails:[
+      'Usa el <a href="https://www.chicago.gov/city/en/depts/cdph/provdrs/health_services/svcs/find_a_communityhealthcenter.html" target="_blank">Buscador de Centros de Salud de la Ciudad de Chicago ›</a> para encontrar la clínica más cercana. Todos toman Medicaid, tienen ayuda con el idioma gratis, y la mayoría tienen horas sin cita.',
+      'Toma una foto de tu resumen al final de esta herramienta. Hasta decir “Aprendí que lo que siento es real y tiene un nombre” es suficiente para empezar una conversación.',
+      'Empieza con una sola cosa: mantén tu cuarto más fresco por la noche, o toma menos de una bebida (alcohol o cafeína) que tienda a provocar tus sofocos. Los cambios pequeños que puedes mantener son los que más ayudan.',
+      '<a href="https://joinmidi.com" target="_blank">Midi Health ›</a> toma Medicaid en Illinois. No se necesita visita en persona. Puedes reservar una visita en como 5 minutos desde esta pantalla.',
+      'Toma una foto o imprime tu resumen. Llévalo y di: “Terminé un programa de salud de la menopausia y me gustaría hablar de mis opciones.” Tu resumen habla por ti.',
+      'Esa también es una decisión real. Guarda esta herramienta en tu teléfono. Vuelve cuando estés lista. Tus recursos seguirán aquí.'
+    ],
+    sumDefault:'Todavía estás descubriendo qué es lo que más te importa, y eso está bien. Los recursos de abajo pueden ayudarte mientras lo decides.',
+    sumSingle:'Nos dijiste que “{item}” es lo que más te importa. Tu plan se ajusta a esto.',
+    sumMultiple:'Nos dijiste que {list} y {last} son lo que más te importa. Tu plan se ajusta a esto.',
+    noStep:'Aún no has elegido un paso.',
+    encWithStep:'Sabes qué te importa, y elegiste un paso que se ajusta a eso. Eso es progreso real. Guarda este resumen y vuelve a él cada vez que necesites un recordatorio.',
+    encNoStep:'Tomaste un gran paso hoy al aprender sobre tu salud. Este resumen es tuyo. Guárdalo.',
+    sshotTip:'Para guardar tu resumen:\n\niPhone: Presiona el botón lateral y el de subir volumen al mismo tiempo.\n\nAndroid: Presiona el botón de encendido y el de bajar volumen al mismo tiempo.\n\nO toca Imprimir para guardarlo como PDF.',
+    startOver:'Empezar de nuevo',
+    confirmStartOver:'¿Estás segura de empezar de nuevo? Esto borrará todas tus respuestas y tu progreso.',
+    sympDtls:{
+      hf:{n:'Sofocos',w:'Cuando baja el estrógeno, cambia la parte de tu cerebro que controla el calor del cuerpo. Tu cerebro cree que tienes demasiado calor y trata de enfriarte. Eso es el sofoco. La terapia hormonal funciona mejor, pero la respiración profunda, los cuartos frescos y otros pasos también ayudan.'},
+      ns:{n:'Sudores nocturnos',w:'Los sudores nocturnos son sofocos que pasan mientras duermes. Interrumpen tu sueño, lo cual causa cansancio, lagunas mentales y cambios de ánimo durante el día. Todo está conectado. Tratar los sudores nocturnos a menudo ayuda con muchos síntomas a la vez.'},
+      sl:{n:'Problemas para dormir',w:'El estrógeno y la progesterona influyen en cómo duermes. Cuando bajan, puede ser más difícil dormirte, mantenerte dormida y llegar al sueño profundo. Este es uno de los síntomas de la menopausia que a menudo no recibe suficiente ayuda, y hay muchas cosas que funcionan, con y sin hormonas.'},
+      jp:{n:'Dolor en las articulaciones',w:'El estrógeno ayuda a mantener baja la inflamación en el cuerpo. Cuando los niveles bajan, la inflamación en las articulaciones puede subir. Esto es real y se puede medir. A menudo se pasa por alto como síntoma de la menopausia. Mover tu cuerpo seguido y algunas medicinas pueden ayudar.'},
+      ip:{n:'Períodos irregulares',w:'La perimenopausia hace que los períodos sean desiguales. Pueden ser más fuertes, más leves, más seguidos, o saltados. Esto puede durar años antes de la menopausia. Anotar tu ciclo y los síntomas ayuda a que los proveedores te den mejor atención.'},
+      bl:{n:'Cambios en la vejiga',w:'El estrógeno ayuda a mantener sana la vejiga. Cuando los niveles bajan, este tejido se vuelve más delgado y más sensible. Eso puede causar escapes, urgencias repentinas o ir al baño seguido. Se trata muy bien, incluso con estrógeno vaginal en dosis baja, que tiene efectos muy pequeños en el resto del cuerpo.'},
+      vd:{n:'Sequedad vaginal',w:'Cuando baja el estrógeno, el tejido de la zona íntima se vuelve delgado y seco. Esto puede hacer que el sexo sea doloroso o incómodo y sube el riesgo de infecciones. Se trata muy bien. El estrógeno vaginal en dosis baja funciona mejor, y es seguro para la mayoría de las mujeres, hasta para las que no pueden usar otras terapias hormonales.'},
+      wt:{n:'Cambios de peso',w:'Los cambios de hormonas en la menopausia cambian cómo y dónde el cuerpo guarda la grasa, a menudo moviendo el peso a la barriga incluso cuando comes y te mueves igual. Es tu cuerpo cambiando, no es una falla tuya. Levantar pesas o hacer ejercicios de fuerza es una de las cosas que más ayudan, junto con otros pasos.'},
+      hp:{n:'Palpitaciones del corazón',w:'Un latido del corazón acelerado, con aleteo o fuerte es un síntoma común de la menopausia. Suele venir de los mismos cambios de calor del cuerpo que causan los sofocos. Por lo general no es dañino, pero dile a un proveedor si es nuevo o si te preocupa.'}
+    }
+  }
+};
+function setL(l,el){
+  document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('on');});
+  if(el){el.classList.add('on');}
+  else{document.querySelectorAll('.lb').forEach(function(b){if(b.textContent.trim().toLowerCase().indexOf(l)===0)b.classList.add('on');});}
+  currentLang=l;
+  document.documentElement.lang=l;
+  document.querySelectorAll('[data-en]').forEach(function(node){
+    var txt=node.getAttribute('data-'+l);
+    if(txt!==null){node.innerHTML=txt;}
+  });
+  document.querySelectorAll('[data-en-placeholder]').forEach(function(node){
+    var p=node.getAttribute('data-'+l+'-placeholder');
+    if(p!==null){node.setAttribute('placeholder',p);}
+  });
+  labs=i18n[l].labs.slice();
+  document.querySelectorAll('.pj-lbl').forEach(function(n){n.textContent=i18n[l].pj;});
+  document.querySelectorAll('.crisis-footer').forEach(function(n){n.innerHTML=i18n[l].crisis;});
+  updH();
+  if(typeof updRefl==='function')updRefl();
+  if(typeof updSug==='function')updSug();
+  if(typeof renderSympDtl==='function')renderSympDtl();
+  saveState();
+}
+
+// rebuild sub-dots for 4 subs
+(function(){var c=document.querySelector('.sdots');c.innerHTML='';for(var i=0;i<m1count;i++){var d=document.createElement('div');d.className='sdot'+(i===0?' active':'');d.id='sd'+i;c.appendChild(d);}})();
+document.getElementById('m1bk').style.visibility='hidden';
+updH();bldDots();
+loadState();
+updateGates();
+</script>
+</body>
+</html>
